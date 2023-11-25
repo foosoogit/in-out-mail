@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactMail;
 use App\Models\InOutHistory;
 use App\Http\Requests\StoreInOutHistoryRequest;
-use App\Models\configration;
+use App\Models\Configration;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\InitConsts;
 use App\Models\MailDelivery;
@@ -258,7 +258,7 @@ class TeachersController extends Controller
 
     public function show_setting()
     {
-        $configration_all=configration::all();
+        $configration_all=Configration::all();
         foreach($configration_all as $configration){
             $configration_array[$configration['subject']]=$configration['value1'];
         }

@@ -21,8 +21,11 @@
                             <thead>
                                 <tr>
                                     <th class="th-min" scope="col" style="width: 40%">
-                                        氏名<br class="d-none d-sm-block"><button type="button" class="btn-orderby-border" wire:click="sort('name_sei-ASC')"><img src="{{ asset('images/sort_A_Z.png') }}"  width="15px"/></button>
-                                        <button type="button" class="btn-orderby-border" wire:click="sort('name_sei-Desc')"><img src="{{ asset('images/sort_Z_A.png') }}"  width="15px"/></button>
+                                        氏名<br class="d-none d-sm-block">
+                                        <div>
+                                            <button type="button" class="btn-orderby-border" wire:click="sort('name_sei-ASC')"><img src="{{ asset('images/sort_A_Z.png') }}"  width="15px"/></button>
+                                            <button type="button" class="btn-orderby-border" wire:click="sort('name_sei-Desc')"><img src="{{ asset('images/sort_Z_A.png') }}"  width="15px"/></button>
+                                        </div>
                                     </th>
                                     <th class="th-min" scope="col" style="width: 20%">
                                         学年<br class="d-none d-sm-block"><button type="button" class="btn-orderby-border" wire:click="sort('grade-ASC')"><img src="{{ asset('images/sort_A_Z.png') }}"  width="15px" /></button>

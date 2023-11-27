@@ -1,55 +1,53 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-{{-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> --}}
-<title>生徒一覧</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<link rel="stylesheet" href="css/style.css">
-{{--<link rel="stylesheet" href="{{ asset('css/studentsList.css')  }}" >--}}
-{{--<link rel="stylesheet" href="css/studentsList.css" >--}}
-{{--@vite('public/css/studentsList.css')--}}
-
-<style>
-  /* table_responsive */
-  #table_responsive th, #table_responsive td {
-      text-align: center;
-      width: 20%;
-      min-width: 130px;
-      padding: 5px;
-      height: 60px;
-  }
-  #table_responsive tr:nth-child(2n+1) {
-    background: #e9faf9;
-  }
-  #table_responsive th {
-    padding: 5px;
-    background: #778ca3;
-    border-right: solid 1px #778ca3;
-    color: #ffffff;
-  }
-  #table_responsive th:last-child {
-    border-right: none;
-  }
-  .#table_responsive td {
-    padding: 5px;
-    border-right: solid 1px #778ca3; 
-  }
-  .#table_responsive td:last-child {
-    border-right: none;
-  }
-    /* tab */
-  @media only screen and (max-width: 768px) {
-    #table_responsive {
-      display: block;
-      overflow-x: scroll;
-      white-space: nowrap;
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  {{-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> --}}
+  <title>生徒一覧</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css">
+  {{--<link rel="stylesheet" href="{{ asset('css/studentsList.css')  }}" >--}}
+  {{--<link rel="stylesheet" href="css/studentsList.css" >--}}
+  {{--@vite('public/css/studentsList.css')--}}
+  <style>
+    /* table_responsive */
+    #table_responsive th, #table_responsive td {
+        text-align: center;
+        width: 20%;
+        min-width: 130px;
+        padding: 5px;
+        height: 60px;
     }
-  }
-</style>
-
-	@livewireStyles
+    #table_responsive tr:nth-child(2n+1) {
+      background: #e9faf9;
+    }
+    #table_responsive th {
+      padding: 5px;
+      background: #778ca3;
+      border-right: solid 1px #778ca3;
+      color: #ffffff;
+    }
+    #table_responsive th:last-child {
+      border-right: none;
+    }
+    .#table_responsive td {
+      padding: 5px;
+      border-right: solid 1px #778ca3; 
+    }
+    .#table_responsive td:last-child {
+      border-right: none;
+    }
+      /* tab */
+    @media only screen and (max-width: 768px) {
+      #table_responsive {
+        display: block;
+        overflow-x: scroll;
+        white-space: nowrap;
+      }
+    }
+  </style>
+    @livewireStyles
 </head>
 <body>
   <div class="table-responsive">

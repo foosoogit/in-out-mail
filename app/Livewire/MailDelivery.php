@@ -39,7 +39,6 @@ class MailDelivery extends Component
 		$sort_key_array=explode("-", $sort_key);
 		session(['sort_key' =>$sort_key_array[0]]);
 		session(['asc_desc' =>$sort_key_array[1]]);
-        //print "sort_key1=".session('sort_key');
 	}
     public function render()
     {
@@ -124,7 +123,6 @@ class MailDelivery extends Component
             $targetPage=null;
         }
         if(self::$key=="%%"){$targetPage=null;}
-        //$students=$StudentQuery->paginate($perPage = initConsts::getValue('DdisplayLineNumDeliveryStudentsList'),['*'], 'page',$targetPage);
         $students=$StudentQuery->paginate(200);
         return view('livewire.mail-delivery',compact("students"));
     }

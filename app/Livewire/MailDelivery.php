@@ -9,6 +9,7 @@ use App\Http\Controllers\OtherFunc;
 use Illuminate\Support\Collection;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class MailDelivery extends Component
 {
@@ -39,6 +40,7 @@ class MailDelivery extends Component
 		$sort_key_array=explode("-", $sort_key);
 		session(['sort_key' =>$sort_key_array[0]]);
 		session(['asc_desc' =>$sort_key_array[1]]);
+        Log::alert('sort_key='.session('sort_key'));
 	}
     public function render()
     {

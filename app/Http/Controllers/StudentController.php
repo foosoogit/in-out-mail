@@ -144,7 +144,7 @@ class StudentController extends Controller
         session(['fromPage' => 'InputStudent']);
 		$stud_inf=Student::where('serial_student','=',$request->StudentSerial_Btn)->first();
         $html_grade_slct=OtherFunc::make_html_grade_slct($stud_inf->grade);
-        $html_cource_ckbox=OtherFunc::make_html_course_ckbox($stud_inf->course);
+        $html_course_ckbox=OtherFunc::make_html_course_ckbox($stud_inf->course);
         $html_gender_ckbox=OtherFunc::make_html_gender_ckbox($stud_inf->gender);
         $student_serial=$stud_inf->serial_student;
         $generator = new BarcodeGeneratorHTML();
@@ -162,7 +162,7 @@ class StudentController extends Controller
             }
         }
         $mnge='modify';
-        return view('admin.CreateStudent',compact("barcode","html_gender_ckbox","protector_array","email_array","html_cource_ckbox","stud_inf","html_grade_slct","student_serial","mnge"));
+        return view('admin.CreateStudent',compact("barcode","html_gender_ckbox","protector_array","email_array","html_course_ckbox","stud_inf","html_grade_slct","student_serial","mnge"));
 	}
     
     public function store(StoreStudentRequest $request)

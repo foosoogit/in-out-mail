@@ -73,14 +73,14 @@ class OtherFunc extends Controller
 
 	public static function make_html_course_ckbox($target){
 		$target_CourceArray_array=InitConsts::CourceArray();
-		$htm_cource_ckbox='';
+		$htm_course_ckbox='';
 		foreach($target_CourceArray_array as $cource){
 			$cked='';
 			if(mb_strstr( $target,$cource)!== false){$cked='checked="checked"';}
-			$htm_cource_ckbox.='<label class="block font-medium text-sm text-gray-700"><input class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" type="checkbox" name="course[]" value="'.$cource.'" '.$cked.'>'.$cource.'<label>';
+			$htm_course_ckbox.='<label class="block font-medium text-sm text-gray-700"><input class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" type="checkbox" name="course[]" value="'.$cource.'" '.$cked.'>'.$cource.'<label>';
 		}
         //$htm_cource_ckbox.='</select>';
-		return $htm_cource_ckbox;
+		return $htm_course_ckbox;
 	}
 
 	public static function make_html_gender_ckbox($target){

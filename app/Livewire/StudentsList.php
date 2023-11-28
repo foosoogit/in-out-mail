@@ -47,6 +47,7 @@ class StudentsList extends Component
     public function render()
     {
         $StudentQuery = Student::query();
+        if(session('asc_desc')==""){session(['asc_desc' =>"asc"]);}
         $StudentQuery =$StudentQuery->orderBy(session('sort_key'),session('asc_desc'));
         /*
         if(isset($_SERVER['HTTP_REFERER'])){

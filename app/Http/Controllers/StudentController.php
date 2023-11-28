@@ -200,7 +200,7 @@ class StudentController extends Controller
         $targetgrade="";
         $html_grade_slct=OtherFunc::make_html_grade_slct($targetgrade);
         $TargetCource="";
-        $html_cource_ckbox=OtherFunc::make_html_course_ckbox($TargetCource);
+        $html_course_ckbox=OtherFunc::make_html_course_ckbox($TargetCource);
         $protector_array=array();$email_array=array();
         for($i=0;$i<=2;$i++){
             $protector_array[$i]="";
@@ -211,7 +211,7 @@ class StudentController extends Controller
         $mnge='create';$barcode="";
         $html_gender_ckbox=OtherFunc::make_html_gender_ckbox("");
         //return view('admin.CreateStudent',compact("html_cource_ckbox","stud_inf","student_serial","html_grade_slct","mnge"));
-        return view('admin.CreateStudent',compact("html_gender_ckbox","barcode","email_array","protector_array","html_cource_ckbox","stud_inf","html_grade_slct","mnge"));
+        return view('admin.CreateStudent',compact("html_gender_ckbox","barcode","email_array","protector_array","html_course_ckbox","stud_inf","html_grade_slct","mnge"));
     }
 
     public function edit(Student $Student)

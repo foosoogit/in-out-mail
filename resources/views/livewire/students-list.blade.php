@@ -18,7 +18,7 @@
                    {{--<a href="{{ route('student.create') }}" >新規登録</a> --}}
                </div>
                <div>
-                    <div>
+                    {{--<div>--}}
                         <table class="table table-sm" width="auto">
                             <thead>
                                 <tr>
@@ -95,7 +95,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
+                    {{-- </div> --}}
                </div>
               {{$students->appends(request()->query())->links('pagination::bootstrap-4')}}
             </div>

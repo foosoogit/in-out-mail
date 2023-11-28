@@ -48,7 +48,9 @@ class StudentsList extends Component
     {
         $StudentQuery = Student::query();
         if(session('asc_desc')==""){session(['asc_desc' =>"asc"]);}
-        $StudentQuery =$StudentQuery->orderBy(session('sort_key'),session('asc_desc'));
+        if(session('sort_key')<>""){
+            $StudentQuery =$StudentQuery->orderBy(session('sort_key'),session('asc_desc'));
+        }
         /*
         if(isset($_SERVER['HTTP_REFERER'])){
             OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);

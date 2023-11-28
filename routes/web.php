@@ -128,12 +128,14 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::get('students/list', function () {
         //session(['serchKey' =>""]);
-        return view('admin.ListStudents');
+        //return view('admin.ListStudents');
+        return view('admin.StudentsList');
     })->name('Students.List');
 
     Route::post('students/list', function () {
         //session(['serchKey' =>""]);
-        return view('admin.ListStudents');
+        //return view('admin.ListStudents');
+        return view('admin.StudentsList');
     })->name('Students.List');
     
     Route::get('students/list_ner_num', function () {

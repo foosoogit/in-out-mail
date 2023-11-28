@@ -12,13 +12,14 @@ use Illuminate\Support\Facades\DB;
 //use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class ListStudents extends Component
+class StudentsList extends Component
 {
     use WithPagination;
+    
     public $sort_key_p = '',$asc_desc_p="",$serch_key_p="";
 	public $kensakukey="";
     public static $key="";
-
+    /*
     public function searchClear(){
 		$this->serch_key_p="";
 		$this->kensakukey="";
@@ -35,13 +36,13 @@ class ListStudents extends Component
 		$this->serch_key_p=$this->kensakukey;
 		session(['serchKey' => $this->kensakukey]);
 	}
-
+    */
     public function sort($sort_key){
 		$sort_key_array=array();
 		$sort_key_array=explode("-", $sort_key);
 		session(['sort_key' =>$sort_key_array[0]]);
 		session(['asc_desc' =>$sort_key_array[1]]);
-        //Log::alert('sort_key='.session('sort_key'));
+        Log::alert('sort_key='.session('sort_key'));
 	}
     public function render()
     {
@@ -132,6 +133,7 @@ class ListStudents extends Component
         */
         $students=$StudentQuery->paginate(200);
         //return view('livewire.mail-delivery',compact("students"));
-        return view('livewire.list-students',compact("students"));
+        return view('livewire.students-list',compact("students"));
+        //return view('livewire.students-list');
     }
 }

@@ -161,7 +161,9 @@ class TeachersController extends Controller
                 Log::alert('name-protector='.$protector_array[$i]);
                 $target_item_array['msg']=str_replace('[name-protector]', $protector_array[$i], $msg);
                 $target_item_array['to_email']=$target_email;
-                Mail::send(new ContactMail($target_item_array));
+                if($target_email<>""){
+                  Mail::send(new ContactMail($target_item_array));
+                }
                 //Mail::send(new ContactMail($target_item_array));
                 $i++;
             }

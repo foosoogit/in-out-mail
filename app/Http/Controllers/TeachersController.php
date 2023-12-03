@@ -93,7 +93,7 @@ class TeachersController extends Controller
         //return back()->with('success','Item created successfully!');
         //return view('admin.MailAccountSetting',compact("env_array"));
     }
-    
+
     public function show_email_account_setup(){
         $env_array=array();
         $env_array['MAIL_MAILER']=env('MAIL_MAILER');
@@ -114,18 +114,18 @@ class TeachersController extends Controller
         $show_list_students_html= implode("", $show_list_students_html);
         $show_deliverid_history_html[] = '<iframe src="show_delivery_email_history_list" style="display:block;width:100%;height:100%;" class="h6" id="StudList_if" ></iframe>';
         $show_deliverid_history_html=implode("", $show_deliverid_history_html);
-        return view('admin.CreateMail',compact("show_list_students_html","show_deliverid_history_html")); 
+        return view('admin.CreateMail',compact("show_list_students_html","show_deliverid_history_html"));
     }
-    
+
     public function execute_mail_delivery(Request $request){
         $user = Auth::user();
-        $name_student=OtherFunc::randomName();
-        $name_protector=OtherFunc::randomName();
+        //$name_student=OtherFunc::randomName();
+        //$name_protector=OtherFunc::randomName();
 
         $msg=$request->body;
 
-        $msg=str_replace('[name-protector]', $name_protector, $msg);
-        $msg=str_replace('[name-student]', $name_student, $msg);
+        //$msg=str_replace('[name-protector]', $name_protector, $msg);
+        //$msg=str_replace('[name-student]', $name_student, $msg);
 
         $msg=OtherFunc::ConvertPlaceholder($msg,"body");
         /*
@@ -134,10 +134,10 @@ class TeachersController extends Controller
         $msg=str_replace('[name-jyuku]', InitConsts::JyukuName(), $msg);
         */
         $target_item_array['msg']=$msg;
-                
+
         $sbj=$request->subject;
-        $sbj=str_replace('[name-protector]', $name_protector, $sbj);
-        $sbj=str_replace('[name-student]', $name_student, $sbj);
+        //$sbj=str_replace('[name-protector]', $name_protector, $sbj);
+        //$sbj=str_replace('[name-student]', $name_student, $sbj);
 
         $sbj=OtherFunc::ConvertPlaceholder($sbj,"sbj");
         /*
@@ -158,6 +158,7 @@ class TeachersController extends Controller
             $target_item_array['to_email']=$target_stud_inf_array->email;
             $i=0;
             foreach($to_email_array as $target_email){
+                Log::alert('name-protector='.$protector_array[$i]);
                 $target_item_array['msg']=str_replace('[name-protector]', $protector_array[$i], $msg);
                 $target_item_array['to_email']=$target_email;
                 Mail::send(new ContactMail($target_item_array));
@@ -167,7 +168,7 @@ class TeachersController extends Controller
         }
         $send_mail=implode( ",", $target_stud_email_array );
         $send_mname=implode( ",", $target_stud_name_array );
-        
+
         MailDelivery::updateOrInsert(
             ['id' => $request->id],
             ['student_serial' => $request->student_serial_hdn, 'date_delivered' => date("Y-m-d H:i:s"), 'to_mail_address' => $send_mail, 'student_name'=>$send_mname,'from_mail_address' =>$user->email, 'subject' => $sbj, 'body' => $msg]
@@ -178,9 +179,9 @@ class TeachersController extends Controller
         $show_list_students_html= implode("", $show_list_students_html);
         $show_deliverid_history_html[] = '<iframe src="show_delivery_email_history_list" style="display:block;width:100%;height:100%;" class="h6" id="StudList_if" ></iframe>';
         $show_deliverid_history_html=implode("", $show_deliverid_history_html);
-        return view('admin.CreateMail',compact("show_list_students_html","show_deliverid_history_html")); 
+        return view('admin.CreateMail',compact("show_list_students_html","show_deliverid_history_html"));
     }
-    
+
     public function send_test_mail($type)
     {
         $user = Auth::user();
@@ -268,7 +269,6 @@ class TeachersController extends Controller
     }
 
     public function send_mail_in_out(Request $request){
-        //Log::alert('item_json='.$request->item_json);
         $item_array=json_decode( $request->item_json , true );
         //Log::alert('seated_type='.$item_array['seated_type']);
         //Log::alert('name-student='.$item_array['name_sei']);
@@ -327,9 +327,9 @@ class TeachersController extends Controller
             $student_serial=substr($student_serial,0,$student_serial_length-1);
             $student_serial_int=intval($student_serial);
             $student_serial=strval($student_serial_int);
-        } 
+        }
         */
-          
+
         $StudentInfSql=Student::where('serial_student','=',$student_serial);
         //Log::alert('StudentInfSql->count='.$StudentInfSql->count());
         if($StudentInfSql->count()>0){
@@ -359,10 +359,10 @@ class TeachersController extends Controller
                     $json = json_encode( $target_item_array , JSON_PRETTY_PRINT ) ;
                     echo $json;
                     $inOutHistory = InOutHistory::find($serch_target_history_array->id);
-                    $inOutHistory->update([  
-                        "time_out" => $target_item_array['target_time'],  
+                    $inOutHistory->update([
+                        "time_out" => $target_item_array['target_time'],
                     ]);
-                }  
+                }
             }else{
                 $target_item_array['seated_type']='in';
                 $json = json_encode( $target_item_array , JSON_PRETTY_PRINT ) ;
@@ -388,7 +388,7 @@ class TeachersController extends Controller
         //return view('admin.StandbyDisplay');
     }
 
-    
+
     public function time_diff($d1, $d2){
         $timeStamp1 = strtotime($d1);
         $timeStamp2 = strtotime($d2);
@@ -415,13 +415,13 @@ class TeachersController extends Controller
             return back()->withInput();
         }
     }
-    
+
     public function show_change_password(Request $request,$id)
     {
         $teacher_inf = User::find($id);
         return view('admin.ChangePassword',compact("id","teacher_inf"));
     }
-    
+
     /**
      * Display a listing of the resource.
      *

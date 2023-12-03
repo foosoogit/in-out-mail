@@ -59,6 +59,8 @@ class MailDelivery extends Component
         $this->asc_desc_p=session('asc_desc');
     
         $StudentQuery = Student::query();
+        //$StudentQuery =$StudentQuery->where('name_sei','<>','');
+        $StudentQuery = $StudentQuery->whereNotNull('name_sei');
         $StudentQuery =$StudentQuery->where('name_sei','<>','');
         $from_place="";$target_day="";$backdayly=false;
     

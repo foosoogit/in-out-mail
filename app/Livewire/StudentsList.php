@@ -32,6 +32,7 @@ class StudentsList extends Component
 		session(['serchKey' => $request->input('user_serial')]);
 	}
 
+    
     public function search(){
 		$this->serch_key_p=$this->kensakukey;
 		session(['serchKey' => $this->kensakukey]);

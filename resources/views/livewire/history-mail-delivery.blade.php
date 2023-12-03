@@ -1,5 +1,5 @@
 <div>
-    <div class="py-12"> 
+    <div class="py-12">
        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 h6">
            <div class="pb-4 row justify-content-center align-middle h6">
                <div class="col-auto">
@@ -45,11 +45,15 @@
     <script>
     function setDeriveredMailToBody(sbj,body,stut_name){
         var parentWin=window.parent;
+        //console.log("body"+body);
+        body=body.replace(/&nbsp;/g, ' ');
+        body=body.replace(/&emsp;/g, ' ');
+        body=body.replace(/<br\/>/g, '\n');
         parentWin.document.getElementById('subject').value=sbj;
         parentWin.document.getElementById('body').value=body;
 
-        var send_student_tara=document.getElementById('send_student_tara');
-        send_student_tara.value=stut_name.replace(/,/g, '\n');
+        //var send_student_tara=document.getElementById('send_student_tara');
+        //send_student_tara.value=stut_name.replace(/,/g, '\n');
     }
 </script>
 </div>

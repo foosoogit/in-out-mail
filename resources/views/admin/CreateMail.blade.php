@@ -14,7 +14,7 @@
                     {{--</div>--}}
                 </div>
                 <div class="col-5">
-                    <x-primary-button name="CreateBtn" id="CreateBtn" onclick="location.href='{{route('Students.Create')}}'" >新規作成</x-primary-button>
+                    <x-primary-button name="CreateBtn" id="CreateBtn" onclick="clear_mail();" >新規作成</x-primary-button>
                 </div>
                 </div>
                 <form method="post" action="{{ route('teachers.execute_mail_delivery') }}" >@csrf
@@ -42,7 +42,13 @@
     function kakunin(){
         if(window.confirm('送信します。よろしいですか？')){
             setStudentSerial();
-            //return true
+        }
+    }
+
+    function clear_mail(){
+        if(window.confirm('メール内容をクリアします。よろしいですか？')){
+            document.getElementById('subject').value="";
+            document.getElementById('body').value="";
         }
     }
 </script>

@@ -16,6 +16,11 @@ class HistoryMailDelivery extends Component
 	public $kensakukey="";
     public static $key="";
     
+    public function delete_mail_history($id){
+        $MailDelivery = MailDelivery::find($id);
+        $MailDelivery->delete();
+    }
+    
     public function searchClear(){
 		$this->serch_key_p="";
 		$this->kensakukey="";

@@ -213,8 +213,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('students', [\App\Http\Controllers\StudentController::class,'store'])->name('student');
     Route::post('students/store', [\App\Http\Controllers\StudentController::class,'store'])->name('student.store');
 
-    Route::get('students/list', [TeachersController::class, 'test'])->name('Students.List.get');
-    Route::get('livewire/message/list-students', [TeachersController::class, 'test']);
+    Route::get('students/list', [TeachersController::class, 'show_students_list'])->name('Students.List.get');
+    Route::get('livewire/message/list-students', [TeachersController::class, 'show_students_list']);
 
     //Route::post('students/list', [TeachersController::class, 'test'])->name('Students.List.post');
 

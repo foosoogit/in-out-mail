@@ -24,6 +24,20 @@ use Illuminate\Support\Facades\Storage;
 
 class TeachersController extends Controller
 {
+    public function ajax_get_mail_sending_to(Request $request){
+        //log::alert("checked");
+        //log::alert("mail_serial=".$request->mail_serial);
+        $target_student_inf=MailDelivery::where('id','=',$request->mail_serial)->first('student_serial');
+        //log::alert("target_student_serial=".$target_student_inf->student_serial);
+        $student_serial_array=explode(',', $target_student_inf->student_serial);
+        foreach($student_serial_array as $serial){
+            $res=Student::where('serial_student','=',$serial)->first();
+            $student_inf_array[]=$res->name_sei." ".$res->name_mei."(".$res->grade.")";
+        }
+        $student_inf=implode("\n", $student_inf_array);
+        echo $student_inf;
+	}
+    
     public function update_MailAccount(Request $request)
     {
         $path = base_path('.env');

@@ -21,6 +21,7 @@
                                 <th>件名<br><button type="button" class="btn-orderby-border" wire:click="sort('subject-ASC')"><img src="{{ asset('images/sort_A_Z.png') }}" width="15px" /></button>
                                     <button type="button" class="btn-orderby-border" wire:click="sort('subject-Desc')"><img src="{{ asset('images/sort_Z_A.png') }}" width="15px" /></button>
                                 </th>
+                                <th>送信先</th>
                                 <th>削除</th>
                             </tr>
                         </thead>
@@ -33,32 +34,37 @@
                                     <input type="hidden" id="mail_body" name="mail_body" value="{{ $Deliveied->body }}">
                                 </td>
                                 <td>
-                                    <button type="button" class="btn-orderby-border" onClick="delete_mail('{{ $Deliveied->id }}')">
-                                        <img src="{{ asset('images/trash_can.png') }}" width="15px" />
-                                    </button>
+                                    <a href="javascript:ShowSendingTo('{{ $Deliveied->id }}')">送信先</a>
+                                    <input type="hidden" id="mail_serial" name="mail_serial" value="{{ $Deliveied->id }}">
+                                </td>
+                                <td>
+                                  <button type="button" class="btn-orderby-border" onClick="delete_mail('{{ $Deliveied->id }}')">
+                                      <img src="{{ asset('images/trash_can.png') }}" width="15px" />
+                                  </button>
                                 </td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
-               </div>
-              {{$mailDeliveied->appends(request()->query())->links('pagination::bootstrap-4')}}
+                </div>
+                {{$mailDeliveied->appends(request()->query())->links('pagination::bootstrap-4')}}
            </div>
-           <x-input-label for="send_student" value="配信者" />
+           {{--
+           <x-input-label for="send_student_tara" value="配信先" />
               <textarea id="send_student_tara" name="send_student_tara"></textarea>
+            --}}
        </div>
     </div>
     <script>
         function setDeriveredMailToBody(sbj,body,stut_name){
             var parentWin=window.parent;
-            //console.log("body"+body);
             body=body.replace(/&nbsp;/g, ' ');
             body=body.replace(/&emsp;/g, ' ');
             body=body.replace(/<br\/>/g, '\n');
-            parentWin.document.getElementById('subject').value=sbj;
+            
             parentWin.document.getElementById('body').value=body;
+            parentWin.document.getElementById('subject').value=sbj;
         }
-        
         function delete_mail(id){
             if(window.confirm('メール履歴を削除します。よろしいですか？')){
                 @this.delete_mail_history(id);

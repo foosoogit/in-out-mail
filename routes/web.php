@@ -21,41 +21,69 @@ use Illuminate\Support\Facades\Log;
 |
 */
 Route::get('/show_rireki_for_protector', function () {
-    Log::alert('show_rireki_for_protector get');
+    //session(['serchKey' =>$request->studserial]);
+    return view('protector.RirekiForProtector');
+})->name('show_rireki_for_protector');
+Route::post('/show_rireki_for_protector', function () {
+    //session(['serchKey' =>$request->studserial]);
     return view('protector.RirekiForProtector');
 })->name('show_rireki_for_protector');
 
-/*
-Route::post('/show_rireki_for_protector', function () {
-    Log::alert('show_rireki_for_protector post');
-    return view('protector.RirekiForProtector');
-})->name('show_rireki_for_protector');
-*/
 Route::get('/login_protector', function () {
     return view('protector.LoginProtector');
-    //return view('dashboard');
 })->name('protector.login');
+/*
+Route::get('/', function () {
+    $user = User::first();
+    Mail::send(new ContactMail($user));
+    return view('welcome');
+});
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
 
 Route::get('/menu', function () {
     //return view('dashboard');
     $MAIL_FROM_NAME=env('MAIL_FROM_NAME');
     return view('admin.menu',compact('MAIL_FROM_NAME'));
 })->middleware(['auth', 'verified'])->name('menu');
-
+Route::view('barcode', 'barcode');
+//Route::get('students/create', 'create')->name('student.create');
+//Route::middleware('auth')->group(function () {
 Route::group(['middleware' => ['auth']], function(){
     Route::controller(TeachersController::class)->name('teachers.')->group(function() {
+        Route::post('/teachers/ajax_get_mail_sending_to', [TeachersController::class,'ajax_get_mail_sending_to'])->name("ajax_get_mail_sending_to");
         Route::post('/teachers/update_MailAccount','update_MailAccount')->name('email_account.update');
         Route::get('/show_email_account_setup','show_email_account_setup')->name('show_email_account_setup');
         Route::get('/','show_setting')->name('show_setting');
-        Route::post('/','show_setting')->name('show_setting');
         Route::post('teachers/execute_mail_delivery', 'execute_mail_delivery')->name('execute_mail_delivery');
-        Route::get('teachers/show_delivery_email', 'show_delivery_email')->name('show_delivery_email');
+        Route::get('teachers/show_delivery_email', 'show_delivery_email')->name('show_delivery_email.get');
+        Route::post('teachers/show_delivery_email', 'show_delivery_email')->name('show_delivery_email.post');
+
+        Route::get('livewire/message/mail-delivery', 'stud_list_maildelivery');
+
         Route::get('teachers/show_delivery_email_list_students', function () {
             return view('admin.MailDelivery');
         })->name('show_delivery_email_list_students');
+
+        Route::post('teachers/show_delivery_email_list_students', function () {
+            return view('admin.MailDelivery');
+        })->name('show_delivery_email_list_students.post');
+
         Route::get('teachers/show_delivery_email_history_list', function () {
             return view('admin.HistoryMailDelivery');
         })->name('show_delivery_email_history_list');
+
+        Route::post('teachers/show_delivery_email_history_list', function () {
+            return view('admin.HistoryMailDelivery');
+        })->name('show_delivery_email_history_list.post');
+
         Route::get('teachers/show_create_email', function () {
             return view('admin.CreateMail');
         })->name('show_create_email');
@@ -108,6 +136,7 @@ Route::group(['middleware' => ['auth']], function(){
     })->name('admin.showRireki');
 
     Route::post('ShowRireki', function (Request $request) {
+        Log::alert('studserial-1='.$request->studserial);
         session(['serchKey' =>$request->studserial]);
         session(['sort_key' =>"time_in"]);
         session(['asc_desc' =>'desc']);
@@ -125,19 +154,28 @@ Route::group(['middleware' => ['auth']], function(){
         return view('admin.ListStudents');
     });
     */
+    
+    //Route::get('students/list', [ListStudents::class,'render'])->name('Students.List.get');
+    //Route::get('students/list', ListStudents::class)->name('Students.List.get');
 
+    
+    /*
     Route::get('students/list', function () {
         //session(['serchKey' =>""]);
-        //return view('admin.ListStudents');
-        return view('admin.StudentsList');
-    })->name('Students.List');
+        return view('admin.ListStudents');
+    })->name('Students.List.get');
 
+    //Route::get('/students/list',ListStudents::class)->name('Students.List.get');
+    Route::post('students/list', [ListStudents::class,function(Request $request){}])->name('Students.List.post');
+   */
+
+
+    /*
     Route::post('students/list', function () {
         //session(['serchKey' =>""]);
-        //return view('admin.ListStudents');
-        return view('admin.StudentsList');
-    })->name('Students.List');
-    
+        return view('admin.ListStudents');
+    })->name('Students.List.post');
+    */
     Route::get('students/list_ner_num', function () {
         session(['serchKey' =>""]);
         session(['sort_key' =>"email"]);
@@ -175,21 +213,11 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('students', [\App\Http\Controllers\StudentController::class,'store'])->name('student');
     Route::post('students/store', [\App\Http\Controllers\StudentController::class,'store'])->name('student.store');
 
-   Route::get('/logout', 'Auth\LoginController@logout');
-});
-/*
-Route::get('/', function () {
-    return view('welcome');
-});
-*/
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('students/list', [TeachersController::class, 'test'])->name('Students.List.get');
+    Route::get('livewire/message/list-students', [TeachersController::class, 'test']);
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+    //Route::post('students/list', [TeachersController::class, 'test'])->name('Students.List.post');
 
+   //Route::get('/logout', 'Auth\LoginController@logout');
+});
 require __DIR__.'/auth.php';

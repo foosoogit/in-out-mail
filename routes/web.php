@@ -216,6 +216,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('students/list', [TeachersController::class, 'show_students_list'])->name('Students.List.get');
     Route::get('livewire/message/list-students', [TeachersController::class, 'show_students_list']);
 
+    Route::get('livewire/update', [TeachersController::class, 'show_students_list']);
+
+    
+
     //Route::post('students/list', [TeachersController::class, 'test'])->name('Students.List.post');
 
    //Route::get('/logout', 'Auth\LoginController@logout');

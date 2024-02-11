@@ -3,16 +3,12 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="pb-4 row justify-content-center align-middle">
                 <div class="col-auto">
-                {{--<a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">メニューに戻る</a>--}}
                 <button type="button" name="ToMenuBtn" id="ToMenuBtn" onclick="location.href='{{route('menu')}}'" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">メニューに戻る</button>
                 </div>
             <div class="col-auto"><button type="button" name="CreateBtn" id="CreateBtn" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700" onclick="location.href='{{route('Students.Create')}}'" >新規登録</button></div>
                 <div class="col-auto"><x-text-input id="kensakukey_txt" name="kensakukey_txt" type="text" class="mt-1 block w-full" :value="old('kensakukey','optional(target_key)')" required autofocus wire:model.defer="kensakukey"/></div>
-                {{--  <a wire:click="search()" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">検索</a>--}}
                 <div class="col-auto"><button type="button" name="SerchBtn" id="SerchBtn" wire:click="search()" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">検索</button></div>
-                {{-- <div class="col-auto"><a href="{{ route('Students.List') }}">検索解除</a></div> --}}
                 <div class="col-auto"><button type="button" name="SerchClearBtn" id="SerchClearBtn" wire:click="searchClear()" onclick="document.getElementById('kensakukey_txt').value=''" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">検索解除</button></div>
-                {{--<a href="{{ route('student.create') }}" >新規登録</a> --}}
             </div>
             <div>
             <table id="table_responsive">
@@ -40,7 +36,7 @@
                     <th>入退出履歴</th>
                     <th>削除</th>
                 </tr>
-                @foreach ($students as $student)
+                @foreach($students as $student)
                 <tr>
                     <td>
                         <form action="{{route('ShowInputStudent.Modify')}}" method="POST">@csrf<input name="StudentSerial_Btn" type="submit" value="{{ $student->serial_student}}"></form>
@@ -76,6 +72,7 @@
                 @endforeach
             </table>
         </div>
-        {{$students->appends(request()->query())->links('pagination::bootstrap-4')}}
+        {{ $students->links('pagination::bootstrap-4') }}
+        {{--{{$students->appends(request()->query())->links('pagination::bootstrap-4')}}--}}
     </div>
 </div>

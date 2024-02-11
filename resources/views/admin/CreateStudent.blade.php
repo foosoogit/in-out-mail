@@ -27,7 +27,7 @@
                                 <x-primary-button class="btn btn-primary" onclick="location.href='{{route('menu')}}'">メニュー</x-primary-button>
                             </div>
                             <div class="col-auto">
-                                <x-primary-button class="btn btn-primary" onclick="location.href='{{route('Students.List')}}'" >生徒一覧</x-primary-button>
+                                <x-primary-button class="btn btn-primary" onclick="location.href='{{route('Students.List.get')}}'" >生徒一覧</x-primary-button>
                             </div>
                         </div>
                         </p>

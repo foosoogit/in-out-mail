@@ -77,7 +77,8 @@ class ContactMail extends Mailable
         return new Content(
             markdown: 'emails.contact',
             //text: $this->target_item_array['msg'],
-            text: 'emails.contact',
+            //text: 'emails.contact',
+            html: 'emails.contact',
         );
     }
 

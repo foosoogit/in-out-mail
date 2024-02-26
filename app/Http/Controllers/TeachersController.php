@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-//use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TeachersController extends Controller
 {
@@ -63,18 +62,11 @@ class TeachersController extends Controller
         $send_mail=implode( ",", $target_stud_email_array );
         $send_name=implode( ",", $target_stud_name_array );
         $send_stud_serial=implode( ",", $send_stud_serial_array);
-        Log::alert("send_mail=".$send_mail);
+        //Log::alert("send_mail=".$send_mail);
         MailDelivery::updateOrInsert(
             ['id' => $request->id],
             ['student_serial' => $send_stud_serial, 'date_delivered' => date("Y-m-d H:i:s"), 'to_mail_address' => $send_mail, 'student_name'=>$send_name,'from_mail_address' =>$user->email, 'subject' => $sbj, 'body' => $msg]
         );
-        /*
-        MailDelivery::updateOrInsert(
-            ['id' => $request->id],
-            ['student_serial' => $request->student_serial_hdn, 'date_delivered' => date("Y-m-d H:i:s"), 'to_mail_address' => $send_mail, 'student_name'=>$send_name,'from_mail_address' =>$user->email, 'subject' => $sbj, 'body' => $msg]
-        );
-        */
-
         $show_list_students_html = [];
         $show_list_students_html[] = '<iframe src="show_delivery_email_list_students" style="display:block;width:100%;height:100%;" class="h6" id="StudList_if" ></iframe>';
         $show_list_students_html= implode("", $show_list_students_html);

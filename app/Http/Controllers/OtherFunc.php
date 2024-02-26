@@ -7,10 +7,27 @@ use App\Models\Student;
 use App\Http\Controllers\InitConsts;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\ViewErrorBag;
+use Illuminate\Support\MessageBag;
 
 class OtherFunc extends Controller
 {
-    public static function ConvertPlaceholder($target_txt,$type){
+    public static function validateMail($tagetEmail){
+		$target_array = array('mail'=>$tagetEmail);
+		$validator = Validator::make($target_array,
+			['mail' => 'email']
+	);
+		if($validator->fails()) {
+			return $tagetEmail;
+			//$errorMessage = array_map(fn($message) => "{$key + 1}行目：{$message}", $validator->errors()->all());
+			//$upload_error_list = array_merge($upload_error_list, $errorMessage);
+		}else{
+			return null;
+		}
+	}
+
+	public static function ConvertPlaceholder($target_txt,$type){
 		//$target_txt=str_replace('[name-student]', $item_array['name_sei']." ".$item_array['name_mei'], $target_txt);
         //$target_txt=str_replace('[time]', $item_array['target_time'], $target_txt);
         $target_txt=str_replace('[name-jyuku]', InitConsts::JyukuName(), $target_txt);

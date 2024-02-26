@@ -12,7 +12,8 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
 		   }
 	}).done(function (data) {
-		alert("送信先：\n"+data);
+		window.confirm("送信先(〇:成功/×:失敗)：\n"+data);
+		//alert("送信先：\n"+data);
 	}) .fail(function (XMLHttpRequest, textStatus, errorThrown) {
 		//alert(XMLHttpRequest.status);
 		//alert(textStatus);

@@ -24,6 +24,65 @@ use Illuminate\Support\Facades\Storage;
 
 class TeachersController extends Controller
 {
+    public function execute_mail_delivery(Request $request){
+        $user = Auth::user();
+        $msg=$request->body;
+        $msg=OtherFunc::ConvertPlaceholder($msg,"body");
+        $target_item_array['msg']=$msg;
+        $sbj=$request->subject;
+        $sbj=OtherFunc::ConvertPlaceholder($sbj,"sbj");
+        $target_item_array['subject']=$sbj;
+        $target_item_array['from_email']=$user->email;
+        $student_serial_array=explode(',', $request->student_serial_hdn);
+        $target_stud_email_array=array();
+        $send_stud_serial_array=array();
+        foreach($student_serial_array as $student_serial){
+            $target_stud_inf_array=Student::where("serial_student","=",$student_serial)->first();
+            $to_email_array=explode(",",$target_stud_inf_array->email);
+            $protector_array=explode(",",$target_stud_inf_array->protector);
+            $target_stud_name_array[]=$target_stud_inf_array->name_sei.$target_stud_inf_array->name_mei;
+            $target_item_array['to_email']=$target_stud_inf_array->email;
+            $i=0;
+            foreach($to_email_array as $target_email){
+                //Log::alert('name-protector='.$protector_array[$i]);
+                //log::alert("validateMail=".OtherFunc::validateMail($target_email));
+                if(OtherFunc::validateMail($target_email)==null && !empty($target_email)){
+                    $target_item_array['msg']=str_replace('[name-protector]', $protector_array[$i], $msg);
+                    //$target_item_array['to_email']=$target_email;
+                    $send_stud_serial_array[]=$student_serial;
+                //if(!empty($target_email)){
+                  Mail::send(new ContactMail($target_item_array));
+                }else{
+                    $target_item_array['msg']=str_replace('[name-protector]', $protector_array[$i], $msg);
+                    $send_stud_serial_array[]="F_".$student_serial;
+                    //$target_item_array['to_email']="F_".$target_email;
+                }
+                $i++;
+            }
+        }
+        $send_mail=implode( ",", $target_stud_email_array );
+        $send_name=implode( ",", $target_stud_name_array );
+        $send_stud_serial=implode( ",", $send_stud_serial_array);
+        Log::alert("send_mail=".$send_mail);
+        MailDelivery::updateOrInsert(
+            ['id' => $request->id],
+            ['student_serial' => $send_stud_serial, 'date_delivered' => date("Y-m-d H:i:s"), 'to_mail_address' => $send_mail, 'student_name'=>$send_name,'from_mail_address' =>$user->email, 'subject' => $sbj, 'body' => $msg]
+        );
+        /*
+        MailDelivery::updateOrInsert(
+            ['id' => $request->id],
+            ['student_serial' => $request->student_serial_hdn, 'date_delivered' => date("Y-m-d H:i:s"), 'to_mail_address' => $send_mail, 'student_name'=>$send_name,'from_mail_address' =>$user->email, 'subject' => $sbj, 'body' => $msg]
+        );
+        */
+
+        $show_list_students_html = [];
+        $show_list_students_html[] = '<iframe src="show_delivery_email_list_students" style="display:block;width:100%;height:100%;" class="h6" id="StudList_if" ></iframe>';
+        $show_list_students_html= implode("", $show_list_students_html);
+        $show_deliverid_history_html[] = '<iframe src="show_delivery_email_history_list" style="display:block;width:100%;height:100%;" class="h6" id="StudList_if" ></iframe>';
+        $show_deliverid_history_html=implode("", $show_deliverid_history_html);
+        return view('admin.CreateMail',compact("show_list_students_html","show_deliverid_history_html"));
+    }
+
     public function show_students_list(){
         return view('admin.ListStudents');
     }
@@ -32,8 +91,15 @@ class TeachersController extends Controller
         $target_student_inf=MailDelivery::where('id','=',$request->mail_serial)->first('student_serial');
         $student_serial_array=explode(',', $target_student_inf->student_serial);
         foreach($student_serial_array as $serial){
-            $res=Student::where('serial_student','=',$serial)->first();
-            $student_inf_array[]=$res->name_sei." ".$res->name_mei."(".$res->grade.")";
+            Log::alert("serial=".$serial);
+            $res=Student::where('serial_student','=',str_replace("F_","", $serial))->first();
+            Log::alert("serial 2=".str_replace("F_","", $serial));
+            if(str_contains($serial, "F_")){
+                //$serial=str_replace($serial, "", "F_");
+                $student_inf_array[]="〇)".$res->name_sei." ".$res->name_mei."(".$res->grade.")";
+            }else{
+                $student_inf_array[]="×)".$res->name_sei." ".$res->name_mei."(".$res->grade.")";
+            }
         }
         $student_inf=implode("\n", $student_inf_array);
         echo $student_inf;
@@ -124,73 +190,6 @@ class TeachersController extends Controller
     }
 
     public function show_delivery_email(){
-        $show_list_students_html = [];
-        $show_list_students_html[] = '<iframe src="show_delivery_email_list_students" style="display:block;width:100%;height:100%;" class="h6" id="StudList_if" ></iframe>';
-        $show_list_students_html= implode("", $show_list_students_html);
-        $show_deliverid_history_html[] = '<iframe src="show_delivery_email_history_list" style="display:block;width:100%;height:100%;" class="h6" id="StudList_if" ></iframe>';
-        $show_deliverid_history_html=implode("", $show_deliverid_history_html);
-        return view('admin.CreateMail',compact("show_list_students_html","show_deliverid_history_html"));
-    }
-
-    public function execute_mail_delivery(Request $request){
-        $user = Auth::user();
-        //$name_student=OtherFunc::randomName();
-        //$name_protector=OtherFunc::randomName();
-
-        $msg=$request->body;
-
-        //$msg=str_replace('[name-protector]', $name_protector, $msg);
-        //$msg=str_replace('[name-student]', $name_student, $msg);
-
-        $msg=OtherFunc::ConvertPlaceholder($msg,"body");
-        /*
-        $msg=str_replace('[time]', date("Y-m-d H:i:s"), $msg);
-        $msg=str_replace('[footer]', InitConsts::MsgFooter(), $msg);
-        $msg=str_replace('[name-jyuku]', InitConsts::JyukuName(), $msg);
-        */
-        $target_item_array['msg']=$msg;
-
-        $sbj=$request->subject;
-        //$sbj=str_replace('[name-protector]', $name_protector, $sbj);
-        //$sbj=str_replace('[name-student]', $name_student, $sbj);
-
-        $sbj=OtherFunc::ConvertPlaceholder($sbj,"sbj");
-        /*
-        $sbj=str_replace('[time]', date("Y-m-d H:i:s"), $sbj);
-        $sbj=str_replace('[footer]', InitConsts::MsgFooter(), $sbj);
-        $sbj=str_replace('[name-jyuku]', InitConsts::JyukuName(), $sbj);
-        */
-
-        $target_item_array['subject']=$sbj;
-        $target_item_array['from_email']=$user->email;
-        $student_serial_array=explode(',', $request->student_serial_hdn);
-        $target_stud_email_array=array();
-        foreach($student_serial_array as $student_serial){
-            $target_stud_inf_array=Student::where("serial_student","=",$student_serial)->first();
-            $to_email_array=explode(",",$target_stud_inf_array->email);
-            $protector_array=explode(",",$target_stud_inf_array->protector);
-            $target_stud_name_array[]=$target_stud_inf_array->name_sei.$target_stud_inf_array->name_mei;
-            $target_item_array['to_email']=$target_stud_inf_array->email;
-            $i=0;
-            foreach($to_email_array as $target_email){
-                Log::alert('name-protector='.$protector_array[$i]);
-                $target_item_array['msg']=str_replace('[name-protector]', $protector_array[$i], $msg);
-                $target_item_array['to_email']=$target_email;
-                if($target_email<>""){
-                  Mail::send(new ContactMail($target_item_array));
-                }
-                //Mail::send(new ContactMail($target_item_array));
-                $i++;
-            }
-        }
-        $send_mail=implode( ",", $target_stud_email_array );
-        $send_mname=implode( ",", $target_stud_name_array );
-
-        MailDelivery::updateOrInsert(
-            ['id' => $request->id],
-            ['student_serial' => $request->student_serial_hdn, 'date_delivered' => date("Y-m-d H:i:s"), 'to_mail_address' => $send_mail, 'student_name'=>$send_mname,'from_mail_address' =>$user->email, 'subject' => $sbj, 'body' => $msg]
-        );
-
         $show_list_students_html = [];
         $show_list_students_html[] = '<iframe src="show_delivery_email_list_students" style="display:block;width:100%;height:100%;" class="h6" id="StudList_if" ></iframe>';
         $show_list_students_html= implode("", $show_list_students_html);

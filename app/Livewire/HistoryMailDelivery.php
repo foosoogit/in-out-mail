@@ -74,6 +74,8 @@ class HistoryMailDelivery extends Component
             }else{
                 $mailDeliveiedQuery =$mailDeliveiedQuery->orderBy($this->sort_key_p, 'desc');
             }
+        }else{
+            $mailDeliveiedQuery =$mailDeliveiedQuery->orderBy("date_delivered", 'desc');
         }
 
         if(session('target_page_for_pager_mail')!==null){

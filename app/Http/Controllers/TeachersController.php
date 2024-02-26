@@ -88,9 +88,9 @@ class TeachersController extends Controller
             Log::alert("serial 2=".str_replace("F_","", $serial));
             if(str_contains($serial, "F_")){
                 //$serial=str_replace($serial, "", "F_");
-                $student_inf_array[]="〇)".$res->name_sei." ".$res->name_mei."(".$res->grade.")";
-            }else{
                 $student_inf_array[]="×)".$res->name_sei." ".$res->name_mei."(".$res->grade.")";
+            }else{
+                $student_inf_array[]="〇)".$res->name_sei." ".$res->name_mei."(".$res->grade.")";
             }
         }
         $student_inf=implode("\n", $student_inf_array);

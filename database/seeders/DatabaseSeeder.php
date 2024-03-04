@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Student;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $configrations = [
 			[
 				'subject'=> "JyukuName",
-				'value1' => "教進セミナー",
+				'value1' => "安房英数学院",
 				'setumei' => "塾名",
             ],
 			[
@@ -40,7 +41,7 @@ class DatabaseSeeder extends Seeder
 			],
 			[
 				'subject'=> "Course",
-				'value1' => "学習塾,英会話",
+				'value1' => "学習塾",
 				'setumei' => "コース",
 			],
 			[
@@ -110,9 +111,11 @@ class DatabaseSeeder extends Seeder
 			$conf->save();
 		}
 
+		Student::factory()->count(10000)->create();
+		/*
         $init_students = [
             [
-				'serial_student' => '200000000000',
+				'serial_student' => '10000',
                 'email' => 'awa@szemi-gp.com',
                 'name_sei' => '鈴木',
                 'name_mei'=> '文彦',
@@ -172,7 +175,8 @@ class DatabaseSeeder extends Seeder
                 'instructor'=> '平山,鈴木',
             ],
         ];
-        foreach($init_students as $init_student) {
+
+       foreach($init_students as $init_student) {
 			$student = new Student();
 			$student->serial_student=$init_student['serial_student'];
             $student->email = $init_student['email'];
@@ -192,7 +196,7 @@ class DatabaseSeeder extends Seeder
 			$student->course = $init_student['course'];
 			$student->save();
 		}
-
+		*/
         $init_users = [
 			[
 			'serial_user'=> "T_0001",

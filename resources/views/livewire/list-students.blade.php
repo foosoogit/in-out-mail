@@ -12,17 +12,14 @@
                  --}}
                  <div class="col-auto form-check form-check-inline">
                     <input type="checkbox" name="registered_cbx" id="registered_cbx" wire:click="registered()" class="form-check-input" {{session('registered_flg')}}>
-                    registered_flg={{session('registered_flg')}}
                     <label class="form-check-label" for="registered_cbx">在籍者</label>
                 </div>
                 <div class="col-auto form-check form-check-inline">
                     <input type="checkbox" name="unregistered_cbx" id="unregistered_cbx" wire:click="unregistered()" class="form-check-input" {{session('unregistered_flg')}}>
-                    unregistered_flg={{session('unregistered_flg')}}
                     <label class="form-check-label" for="unregistered_cb">未登録生徒番号</label>
                 </div>
                 <div class="col-auto form-check form-check-inline">
                     <input type="checkbox" name="withdrawn_cbx" id="withdrawn_cbx" wire:click="withdrawn()" class="form-check-input" {{session('withdrawn_flg')}}>
-                    withdrawn_flg={{session('withdrawn_flg')}}
                     <label class="form-check-label" for="withdrawn_cbx">退会者</label>
                 </div>
                 <div class="col-auto">

@@ -76,6 +76,9 @@ class TeachersController extends Controller
     }
 
     public function show_students_list(){
+        session(['registered_flg' => "checked"]);
+        session(['unregistered_flg' => ""]);
+        session(['withdrawn_flg' => ""]);
         return view('admin.ListStudents');
     }
 

@@ -3,12 +3,48 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="pb-4 row justify-content-center align-middle">
                 <div class="col-auto">
-                <button type="button" name="ToMenuBtn" id="ToMenuBtn" onclick="location.href='{{route('menu')}}'" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">メニューに戻る</button>
+                    <button type="button" name="ToMenuBtn" id="ToMenuBtn" onclick="location.href='{{route('menu')}}'" class="btn btn-primary btn-sm">メニューに戻る</button>
                 </div>
-            <div class="col-auto"><button type="button" name="CreateBtn" id="CreateBtn" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700" onclick="location.href='{{route('Students.Create')}}'" >新規登録</button></div>
-                <div class="col-auto"><x-text-input id="kensakukey_txt" name="kensakukey_txt" type="text" class="mt-1 block w-full" :value="old('kensakukey','optional(target_key)')" required autofocus wire:model.defer="kensakukey"/></div>
-                <div class="col-auto"><button type="button" name="SerchBtn" id="SerchBtn" wire:click="search()" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">検索</button></div>
-                <div class="col-auto"><button type="button" name="SerchClearBtn" id="SerchClearBtn" wire:click="searchClear()" onclick="document.getElementById('kensakukey_txt').value=''" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">検索解除</button></div>
+                {{-- 
+                <div class="col-auto">
+                    <button type="button" name="CreateBtn" id="CreateBtn" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700" onclick="location.href='{{route('Students.Create')}}'" >新規登録</button>
+                </div>
+                 --}}
+                 <div class="col-auto form-check form-check-inline">
+                    <input type="checkbox" name="registered_cbx" id="registered_cbx" wire:click="registered()" class="form-check-input" {{session('registered_flg')}}>
+                    registered_flg={{session('registered_flg')}}
+                    <label class="form-check-label" for="registered_cbx">在籍者</label>
+                </div>
+                <div class="col-auto form-check form-check-inline">
+                    <input type="checkbox" name="unregistered_cbx" id="unregistered_cbx" wire:click="unregistered()" class="form-check-input" {{session('unregistered_flg')}}>
+                    unregistered_flg={{session('unregistered_flg')}}
+                    <label class="form-check-label" for="unregistered_cb">未登録生徒番号</label>
+                </div>
+                <div class="col-auto form-check form-check-inline">
+                    <input type="checkbox" name="withdrawn_cbx" id="withdrawn_cbx" wire:click="withdrawn()" class="form-check-input" {{session('withdrawn_flg')}}>
+                    withdrawn_flg={{session('withdrawn_flg')}}
+                    <label class="form-check-label" for="withdrawn_cbx">退会者</label>
+                </div>
+                <div class="col-auto">
+                    <x-text-input id="kensakukey_txt" name="kensakukey_txt" type="text" class="mt-1 block w-full" :value="old('kensakukey','optional(target_key)')" required autofocus wire:model.defer="kensakukey"/>
+                </div>
+                <div class="col-auto">
+                    <button type="button" name="SerchBtn" id="SerchBtn" wire:click="search()" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">検索</button>
+                </div>
+                {{-- 
+                <div class="col-auto">
+                    <button type="button" name="UnregisteredBtn" id="UnregisteredBtn" wire:click="Unregistered()" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">未登録番号</button>
+                </div>
+                <div class="col-auto">
+                    <button type="button" name="UnregisteredBtn" id="UnregisteredBtn" wire:click="searchClear()" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">すべて</button>
+                </div>
+                <div class="col-auto">
+                    <button type="button" name="RetireeBtn" id="RetireeBtn" wire:click="Retiree()" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">退会者</button>
+                </div>
+                 --}}
+                <div class="col-auto">
+                    <button type="button" name="SerchClearBtn" id="SerchClearBtn" wire:click="searchClear()" onclick="document.getElementById('kensakukey_txt').value=''" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">検索解除</button>
+                </div>
             </div>
             <div>
             <table id="table_responsive">

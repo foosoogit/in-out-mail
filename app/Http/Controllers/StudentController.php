@@ -197,6 +197,10 @@ class StudentController extends Controller
 
     public function ShowInputNewStudent(Request $request)
     {
+        session(['registered_flg' => ""]);
+        session(['unregistered_flg' => "checked"]);
+        return view('admin.ListStudents');
+        /*
         $targetgrade="";
         $html_grade_slct=OtherFunc::make_html_grade_slct($targetgrade);
         $TargetCource="";
@@ -212,6 +216,7 @@ class StudentController extends Controller
         $html_gender_ckbox=OtherFunc::make_html_gender_ckbox("");
         //return view('admin.CreateStudent',compact("html_cource_ckbox","stud_inf","student_serial","html_grade_slct","mnge"));
         return view('admin.CreateStudent',compact("html_gender_ckbox","barcode","email_array","protector_array","html_course_ckbox","stud_inf","html_grade_slct","mnge"));
+        */
     }
 
     public function edit(Student $Student)

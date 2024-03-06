@@ -1,0 +1,17 @@
+  /* CheckBoxを大きくする */
+input[type="checkbox"]{
+    transform: scale(2);
+}
+input[type="radio"]{
+    transform: scale(2);
+}
+input[type="text"]{
+    font-size: x-large;
+}
+div.form-check{
+    margin-bottom: 12px;
+}
+.container{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}

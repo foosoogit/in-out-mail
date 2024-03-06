@@ -25,6 +25,9 @@ class ListStudents extends Component
 
     public function registered(){
         //Log::info($obj);
+        //Log::alert('registered_flg='.session('registered_flg'));
+        //Log::alert('unregistered_flg='.session('unregistered_flg'));
+        //Log::alert('withdrawn_flg='.session('withdrawn_flg'));
         if(session('registered_flg')=="checked"){
             session(['registered_flg' => ""]);
         }else{
@@ -112,9 +115,9 @@ class ListStudents extends Component
             OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
         }
         $StudentQuery = Student::query();
-        //Log::alert('registered_flg='.session('registered_flg'));
-        //Log::alert('unregistered_flg='.session('unregistered_flg'));
-        //Log::alert('withdrawn_flg='.session('withdrawn_flg'));
+        Log::alert('registered_flg='.session('registered_flg'));
+        Log::alert('unregistered_flg='.session('unregistered_flg'));
+        Log::alert('withdrawn_flg='.session('withdrawn_flg'));
         //if($this->Unregistered_flg){;
         //if($_SESSION['Unregistered_flg']){
         if(session('registered_flg')=="checked" && session('unregistered_flg')=="" && session('withdrawn_flg')==""){
@@ -128,7 +131,8 @@ class ListStudents extends Component
                 ->orwhere('grade','=',null);
         }else if(session('registered_flg')=="" && session('unregistered_flg')=="checked" && session('withdrawn_flg')=="checked"){
             $StudentQuery =$StudentQuery->where('grade','=','退会')
-                ->orwhere('name_sei','=',"");
+                ->orwhere('name_sei','=',"")
+                ->orwhere('name_sei','=',null);
         }else if(session('registered_flg')=="" && session('unregistered_flg')=="" && session('withdrawn_flg')=="checked"){
             $StudentQuery =$StudentQuery->where('grade','=','退会');
         }else if(session('registered_flg')=="" && session('unregistered_flg')=="checked" && session('withdrawn_flg')==""){

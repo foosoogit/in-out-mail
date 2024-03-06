@@ -20,39 +20,21 @@ class OtherFunc extends Controller
 	);
 		if($validator->fails()) {
 			return $tagetEmail;
-			//$errorMessage = array_map(fn($message) => "{$key + 1}行目：{$message}", $validator->errors()->all());
-			//$upload_error_list = array_merge($upload_error_list, $errorMessage);
 		}else{
 			return null;
 		}
 	}
 
 	public static function ConvertPlaceholder($target_txt,$type){
-		//$target_txt=str_replace('[name-student]', $item_array['name_sei']." ".$item_array['name_mei'], $target_txt);
-        //$target_txt=str_replace('[time]', $item_array['target_time'], $target_txt);
         $target_txt=str_replace('[name-jyuku]', InitConsts::JyukuName(), $target_txt);
         $target_txt=str_replace('[footer]', InitConsts::MsgFooter(), $target_txt);
 		$target_txt=str_replace('[time]', date("Y-m-d H:i:s"), $target_txt);
-		//$target_txt=htmlentities($target_txt, ENT_QUOTES);
         if($type=="body"){
 			$target_txt=str_replace(array("\r\n","\r",PHP_EOL), "<br/>", $target_txt);
 			$target_txt=str_replace(" ", "&nbsp;", $target_txt);
 			$target_txt=str_replace("　", "&emsp;", $target_txt);
 		}
-		
-		//$target_txt=str_replace(array("\r\n","\r","\n",PHP_EOL), "<br>", $target_txt);
-		//$target_txt=str_replace(" ", "&nbsp;", $target_txt);
-		//$target_txt=str_replace("　", "&emsp;", $target_txt);
-		
-		//$target_txt=htmlentities($target_txt, ENT_QUOTES, 'UTF-8');
-		
-		//$target_txt=str_replace(array("\r\n","\r","\n"),PHP_EOL, $target_txt);
-		//$target_txt=htmlentities($target_txt);
-		
-		//$target_txt=str_replace("\n", PHP_EOL, PHP_EOL,$target_txt);
-		//$target_txt.$target_txt;
-		//$target_txt=mb_convert_encoding($target_txt,"UTF-8","auto");
-		Log::alert('target_txt='.$target_txt );
+		//Log::alert('target_txt='.$target_txt );
 		return $target_txt;
 	}
 
@@ -94,24 +76,21 @@ class OtherFunc extends Controller
 		foreach($target_CourceArray_array as $cource){
 			$cked='';
 			if(mb_strstr( $target,$cource)!== false){$cked='checked="checked"';}
-			$htm_course_ckbox.='<label class="block font-medium text-sm text-gray-700"><input class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" type="checkbox" name="course[]" value="'.$cource.'" '.$cked.'>'.$cource.'<label>';
+			$htm_course_ckbox.='<label class="block font-medium text-sm text-gray-700"><input class="form-check-input" type="checkbox" name="course[]" value="'.$cource.'" '.$cked.'>&nbsp;'.$cource.'<label>';
 		}
-        //$htm_cource_ckbox.='</select>';
 		return $htm_course_ckbox;
 	}
 
 	public static function make_html_gender_ckbox($target){
-		//$target_CourceArray_array=InitConsts::CourceArray();
 		$htm_gender_ckbox='';$gender_array=array();
 		$gender_array[0]='男';$gender_array[1]='女';
 		$i=0;
 		foreach($gender_array as $gender){
 			$cked='';
 			if($target==$gender){$cked='checked="checked"';}
-			$htm_gender_ckbox.='<label class="block font-medium text-sm text-gray-700"><input class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" type="checkbox" name="gender[]" id=gender['.$i.'] value="'.$gender.'" '.$cked.' onchange="gender_manage(this);">'.$gender.'<label>';
+			$htm_gender_ckbox.='<label class="block font-medium text-sm text-gray-700"><input class="form-check-inputm" type="checkbox" name="gender[]" id=gender['.$i.'] value="'.$gender.'" '.$cked.' onchange="gender_manage(this);">&nbsp;'.$gender.'<label>';
 			$i++;
 		}
-        //$htm_cource_ckbox.='</select>';
 		return $htm_gender_ckbox;
 	}
 

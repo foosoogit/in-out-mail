@@ -88,7 +88,8 @@ class OtherFunc extends Controller
 		foreach($gender_array as $gender){
 			$cked='';
 			if($target==$gender){$cked='checked="checked"';}
-			$htm_gender_ckbox.='<label class="block font-medium text-sm text-gray-700"><input class="form-check-inputm" type="checkbox" name="gender[]" id=gender['.$i.'] value="'.$gender.'" '.$cked.' onchange="gender_manage(this);">&nbsp;'.$gender.'<label>';
+			$htm_gender_ckbox.='<div class="form-check"><div class="col-auto vertical-align">';
+			$htm_gender_ckbox.='<input class="form-check-input vertical-align" type="checkbox" name="gender[]" id="gender['.$i.']" value="'.$gender.'" '.$cked.' onchange="gender_manage(this);"></div><div class="col-auto vertical-align"><label class="form-check-label vertical-align" for="gender['.$i.']">'.$gender.'</label></div></div>';
 			$i++;
 		}
 		return $htm_gender_ckbox;

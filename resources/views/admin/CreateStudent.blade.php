@@ -67,13 +67,39 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-auto">
+                            {{-- <div class="col-auto"> --}}
                                 {!!$html_gender_ckbox!!}  
+                            {{--</div>--}}
+                             
+                        </div>
+                        <div class="row">
+                            <div class="col-auto"> 
+                                {!!$html_course_ckbox!!} 
+                            </div>
+                        </div>
+                        {{-- 
+                        <div class="row">
+                        <div class="form-check">
+                            <div class="col-auto">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            
+                                <label class="form-check-label" for="flexCheckDefault">
+                              Default checkbox
+                            </label>
+                            </div>
+                          </div>
+                          <div class="form-check">
+                            <div class="col-auto">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
                             </div>
                             <div class="col-auto">
-                                {!!$html_course_ckbox!!} 
-                            </div>                   
+                            <label class="form-check-label" for="flexCheckChecked">
+                              Checked checkbox
+                            </label>
+                            </div>
+                          </div>
                         </div>
+                         --}}
                         <div class="row">
                             <div class="col-4">
                                 <x-input-label for="protector_array[0]" value="送信先宛名-1" class="control-label"/>

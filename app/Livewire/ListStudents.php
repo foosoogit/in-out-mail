@@ -164,7 +164,21 @@ class ListStudents extends Component
             $students=$StudentQuery->paginate($perPage = initConsts::DdisplayLineNumStudentsList(),['*']);
         }
         */
-        $students=$StudentQuery->paginate($perPage = initConsts::DdisplayLineNumStudentsList(),['*']);
+        Log::alert('REQUEST_URI='.$_SERVER['REQUEST_URI']);
+        Log::alert('HTTP_REFERER='.$_SERVER['HTTP_REFERER']);
+       
+        $REQUEST_array=explode("page=", $_SERVER['REQUEST_URI']);
+        if(isset($REQUEST_array[1])){
+            session(['page_history' => $REQUEST_array[1]]);
+        }
+        if(!str_contains($_SERVER['HTTP_REFERER'], "students/list")){
+            $students=$StudentQuery->paginate($perPage = initConsts::DdisplayLineNumStudentsList(),['*'], 'page',session('page_history'));
+        }else{
+            $students=$StudentQuery->paginate($perPage = initConsts::DdisplayLineNumStudentsList(),['*']);
+        }
+
+        //session(['HTTP_REFERER' => $_SERVER['HTTP_REFERER']]);
+        //$page_history=$REQUEST_array[1];
         return view('livewire.list-students',['students'=>$students,]);
     }
 

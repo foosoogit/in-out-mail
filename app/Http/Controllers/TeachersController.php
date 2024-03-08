@@ -23,6 +23,10 @@ use Illuminate\Support\Facades\Storage;
 
 class TeachersController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth');
+    }
+
     public function execute_mail_delivery(Request $request){
         $user = Auth::user();
         $msg=$request->body;
@@ -330,10 +334,9 @@ class TeachersController extends Controller
         echo $json_dat;
     }
 
-    //public function in_out_manage(StoreInOutHistoryRequest $request)
     public function in_out_manage(Request $request)
     {
-        //Log::alert('student_serial-10='.$request->student_serial);
+        Log::alert('Auth check='.Auth::check());
         $student_serial=$request->student_serial;
 
         $student_serial_length=strlen($student_serial);

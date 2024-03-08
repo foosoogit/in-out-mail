@@ -73,7 +73,7 @@
 					}
 				}).done(function (data) {
 					const item_json = JSON.parse(data);
-					console.log("seated_type="+item_json.seated_type);
+					//console.log("seated_type="+item_json.seated_type);
 					if(item_json.seated_type=="false"){
 						audio_false.play();
 						//document.getElementById("seated_type").style.display="";
@@ -99,10 +99,19 @@
 					data=null;
 					window.setTimeout(dispNone, 5000);
 				}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					
+					if(XMLHttpRequest.status==419){
+						alert('ログインしてください。');
+						//location.href = '/menu';
+						location.href = 'show_standby_display';
+						
+					}
+					/*
 					alert(XMLHttpRequest.status);
 					alert(textStatus);
 					alert(errorThrown);	
 					alert('エラー');
+					*/
 				});
 			}else{
 				//alert("TEST");

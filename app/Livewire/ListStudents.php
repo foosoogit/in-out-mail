@@ -115,9 +115,9 @@ class ListStudents extends Component
             OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
         }
         $StudentQuery = Student::query();
-        Log::alert('registered_flg='.session('registered_flg'));
-        Log::alert('unregistered_flg='.session('unregistered_flg'));
-        Log::alert('withdrawn_flg='.session('withdrawn_flg'));
+        //Log::alert('registered_flg='.session('registered_flg'));
+        //Log::alert('unregistered_flg='.session('unregistered_flg'));
+        //Log::alert('withdrawn_flg='.session('withdrawn_flg'));
         //if($this->Unregistered_flg){;
         //if($_SESSION['Unregistered_flg']){
         if(session('registered_flg')=="checked" && session('unregistered_flg')=="" && session('withdrawn_flg')==""){
@@ -164,8 +164,8 @@ class ListStudents extends Component
             $students=$StudentQuery->paginate($perPage = initConsts::DdisplayLineNumStudentsList(),['*']);
         }
         */
-        Log::alert('REQUEST_URI='.$_SERVER['REQUEST_URI']);
-        Log::alert('HTTP_REFERER='.$_SERVER['HTTP_REFERER']);
+        //Log::alert('REQUEST_URI='.$_SERVER['REQUEST_URI']);
+        //Log::alert('HTTP_REFERER='.$_SERVER['HTTP_REFERER']);
        
         $REQUEST_array=explode("page=", $_SERVER['REQUEST_URI']);
         if(isset($REQUEST_array[1])){

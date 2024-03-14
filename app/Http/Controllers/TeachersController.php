@@ -48,7 +48,7 @@ class TeachersController extends Controller
             $i=0;
             foreach($to_email_array as $target_email){
                 //Log::alert('name-protector='.$protector_array[$i]);
-                //log::alert("validateMail=".OtherFunc::validateMail($target_email));
+                log::alert("validateMail=".OtherFunc::validateMail($target_email));
                 if(OtherFunc::validateMail($target_email)==null && !empty($target_email)){
                     $target_item_array['msg']=str_replace('[name-protector]', $protector_array[$i], $msg);
                     //$target_item_array['to_email']=$target_email;
@@ -160,24 +160,7 @@ class TeachersController extends Controller
                 file_get_contents($path)
             ));
         }
-        /*
-        $env_array=array();
-        $env_array['MAIL_MAILER']=config('app.MAIL_MAILER');
-        $env_array['MAIL_HOST']=env('MAIL_HOST');
-        $env_array['MAIL_PORT']=env('MAIL_PORT');
-        $env_array['MAIL_USERNAME']=env('MAIL_USERNAME');
-        $env_array['MAIL_PASSWORD']=env('MAIL_PASSWORD');
-        $env_array['MAIL_ENCRYPTION']=env('MAIL_ENCRYPTION');
-        $env_array['MAIL_FROM_ADDRESS']=env('MAIL_FROM_ADDRESS');
-        $env_array['MAIL_FROM_NAME']=env('MAIL_FROM_MAIL_FROM_NAME');
-        */
-        //$test_alert = "<script type='text/javascript'>alert('こんにちは！侍エンジニアです。');</script>";
-        //echo $test_alert;
-        //session()->flash('flash', '登録しました。');
         return redirect('show_email_account_setup')->with('success','登録しました。');
-        //return redirect('show_email_account_setup');
-        //return back()->with('success','Item created successfully!');
-        //return view('admin.MailAccountSetting',compact("env_array"));
     }
 
     public function show_email_account_setup(){
@@ -336,21 +319,24 @@ class TeachersController extends Controller
 
     public function in_out_manage(Request $request)
     {
-        Log::alert('Auth check='.Auth::check());
         $student_serial=$request->student_serial;
-
+        Log::alert('student_serial='.$student_serial);
         $student_serial_length=strlen($student_serial);
-        //Log::alert('student_serial_length-10='.$student_serial_length);
-        /*
-        if($student_serial_length>=10){
-            //Log::alert('student_serial_length-2='.$student_serial_length);
-            $student_serial=substr($student_serial,0,$student_serial_length-1);
-            $student_serial_int=intval($student_serial);
-            $student_serial=strval($student_serial_int);
-        }
-        */
-
         $StudentInfSql=Student::where('serial_student','=',$student_serial);
+        $StudentInf=$StudentInfSql->first();
+        //Log::info($StudentInfSql);
+        
+        Log::alert('email='.$StudentInf->email);
+        if($StudentInf->email===null){
+            Log::alert('email=null');
+            $target_item_array['seated_type']='NoAddress';
+            $target_item_array['name_sei']=$StudentInf->name_sei;
+            $target_item_array['name_mei']=$StudentInf->name_mei;
+            $json = json_encode( $target_item_array , JSON_PRETTY_PRINT ) ;
+            echo $json;
+            return;   
+        }
+        //Log::alert('Auth check='.Auth::check());
         //Log::alert('StudentInfSql->count='.$StudentInfSql->count());
         if($StudentInfSql->count()>0){
             $StudentInf=$StudentInfSql->first();

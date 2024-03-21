@@ -22,7 +22,7 @@ class ListStudents extends Component
     public $orderColumn = "serial_student";
     public $sortOrder = "asc";
     public $StudentQuery="";
-
+    /*
     public function registered(){
         //Log::info($obj);
         //Log::alert('registered_flg='.session('registered_flg'));
@@ -34,7 +34,7 @@ class ListStudents extends Component
             session(['registered_flg' => "checked"]);
         }
     }
-
+    
     public function unregistered(){
         if(session('unregistered_flg')=="checked"){
             session(['unregistered_flg' => ""]);
@@ -50,7 +50,7 @@ class ListStudents extends Component
             session(['withdrawn_flg' => "checked"]);
         }
     }
-
+    */
     public function searchClear(){
 		$this->serch_key_p="";
 		$this->kensakukey="";
@@ -59,6 +59,12 @@ class ListStudents extends Component
         $this->targetPage=null;
         $this->Unregistered_flg=false;
         $this->Retiree_flg=false;
+
+        $this->serch_key_p="";
+		$this->kensakukey="";
+
+		session(['serchKey' => '']);
+        session(['sort_key2' => 'serial_student']);
     }
 
     public function search_from_top_menu(Request $request){
@@ -69,63 +75,49 @@ class ListStudents extends Component
 
     public function search(){
         $this->targetPage=1;
+
+        $this->serch_key_p=$this->kensakukey;
+		session(['serchKey' => $this->kensakukey]);
 	}
-    /*    
-    public function Unregistered(){
-        $this->Unregistered_flg=true;
-        $this->Retiree_flg=false;
-        $this->targetPage=1;
-        session(['Unregistered_flg' => true]);
-        session(['Retiree_flg' => false]);
-        //$_SESSION['Unregistered_flg']=true;
-        //$_SESSION['Retiree_flg']=false;
-	}
-    */
-    /*
-    public function Retiree(){
-        $this->Unregistered_flg=false;
-        $this->Retiree_flg=true;
-        $this->targetPage=1;
-        session(['Unregistered_flg' => false]);
-        session(['Retiree_flg' => true]);
-        //$_SESSION['UnregisteredFlg']=false;
-        //$_SESSION['Retiree_flg']=true;
-	}
-    */
-    /*
-    public function AllSerial(){
-        $this->Unregistered_flg=false;
-        $this->Retiree_flg=false;
-        $this->targetPage=1;
-        session(['Unregistered_flg' => false]);
-        session(['Retiree_flg' => false]);
-        //$_SESSION['UnregisteredFlg']=false;
-        //$_SESSION['Retiree_flg']=true;
-	}
-    */
+
     public function sort($sort_key){
-		$sort_key_array=array();
+        $sort_key_array=array();
 		$sort_key_array=explode("-", $sort_key);
-        $this->sortOrder=$sort_key_array[1];
-        $this->orderColumn=$sort_key_array[0];
+		session(['sort_key' =>$sort_key_array[0]]);
+		session(['asc_desc' =>$sort_key_array[1]]);
+
 	}
 
     public function render(){
         if(isset($_SERVER['HTTP_REFERER'])){
             OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
         }
+
+
+        if(!isset($sort_key_p) and session('sort_key')==null){
+            session(['sort_key' =>'']);
+        }
+        $this->sort_key_p=session('sort_key');
+    
+        if(!isset($asc_desc_p) and session('asc_desc')==null){
+            session(['asc_desc' =>'ASC']);
+        }
+        $this->asc_desc_p=session('asc_desc');
+
+
         $StudentQuery = Student::query();
-        //Log::alert('registered_flg='.session('registered_flg'));
-        //Log::alert('unregistered_flg='.session('unregistered_flg'));
-        //Log::alert('withdrawn_flg='.session('withdrawn_flg'));
-        //if($this->Unregistered_flg){;
-        //if($_SESSION['Unregistered_flg']){
         if(session('registered_flg')=="checked" && session('unregistered_flg')=="" && session('withdrawn_flg')==""){
-            $StudentQuery =$StudentQuery->where('name_sei','<>',"")
-                ->where('grade','<>','退会');
-            //$StudentQuery=$StudentQuery->orderby($this->orderColumn,$this->sortOrder);
+            $users = $StudentQuery->where('name_sei','<>',null)
+                    ->Where(function($query) {
+                        $query->where('grade','=',null)
+                                ->orwhere('grade','<>','退会');
+                    });
         }else if(session('registered_flg')=="checked" && session('unregistered_flg')=="" && session('withdrawn_flg')=="checked"){
-            $StudentQuery =$StudentQuery->where('name_sei','=',"");
+            $StudentQuery =$StudentQuery->where('grade','=',"退会")
+                ->orWhere(function($query) {
+                    $query->where('name_sei','<>',"")
+                    ->orwhere('name_sei','<>',null);
+                });
         }else if(session('registered_flg')=="checked" && session('unregistered_flg')=="checked" && session('withdrawn_flg')==""){
             $StudentQuery =$StudentQuery->where('grade','<>','退会')
                 ->orwhere('grade','=',null);
@@ -139,6 +131,7 @@ class ListStudents extends Component
             $StudentQuery =$StudentQuery->whereNull('name_sei')
                 ->orwhere('name_sei','=',"");
         }
+
         if($this->kensakukey<>""){
             self::$key="%".$this->kensakukey."%";
             $StudentQuery =$StudentQuery->where('serial_student','like',self::$key)
@@ -150,23 +143,45 @@ class ListStudents extends Component
                 ->orwhere('phone','like',self::$key)
                 ->orwhere('course','like',self::$key);
         }
-        /*
-        $StudentQuery =$StudentQuery->where('name_sei','<>',"")
-            ->where('name_sei','<>',null)    
-            ->where('grade','<>','退会');
-        $StudentQuery=$StudentQuery->orderby($this->orderColumn,$this->sortOrder);
-        */
-        /*
-        if($this->targetPage==1){
-           $students=$StudentQuery->paginate($perPage = initConsts::DdisplayLineNumStudentsList(),['*'], 'page',1);
-           $this->targetPage=null;
+        $targetSortKey="";
+        if(session('sort_key')<>""){
+            $targetSortKey=session('sort_key');
         }else{
-            $students=$StudentQuery->paginate($perPage = initConsts::DdisplayLineNumStudentsList(),['*']);
+            $targetSortKey=$this->sort_key_p;
         }
-        */
-        //Log::alert('REQUEST_URI='.$_SERVER['REQUEST_URI']);
-        //Log::alert('HTTP_REFERER='.$_SERVER['HTTP_REFERER']);
-       
+
+        if($this->sort_key_p=='time_in' | $this->sort_key_p=='time_out'){
+            $this->sort_key_p='serial_student';
+        }
+        if($this->sort_key_p<>''){
+            if($this->sort_key_p=="name_sei"){
+                if($this->asc_desc_p=="ASC"){
+                    $StudentQuery =$StudentQuery->orderBy('name_sei', 'asc');
+                    $StudentQuery =$StudentQuery->orderBy('name_mei', 'asc');
+                }else{
+                    $StudentQuery =$StudentQuery->orderBy('name_sei', 'desc');
+                    $StudentQuery =$StudentQuery->orderBy('name_mei', 'desc');
+                }
+            }else if($this->sort_key_p=="name_sei_kana"){
+                if($this->asc_desc_p=="ASC"){
+                    $StudentQuery =$StudentQuery->orderBy('name_sei_kana', 'asc');
+                    $StudentQuery =$StudentQuery->orderBy('name_mei_kana', 'asc');
+                }else{
+                    $StudentQuery =$StudentQuery->orderBy('name_sei_kana', 'desc');
+                    $StudentQuery =$StudentQuery->orderBy('name_mei_kana', 'desc');
+                }
+            }else{
+                if($this->asc_desc_p=="ASC"){
+                    $StudentQuery =$StudentQuery->orderBy($this->sort_key_p, 'asc');
+                }else{
+                    $StudentQuery =$StudentQuery->orderBy($this->sort_key_p, 'desc');
+                }
+            }
+        }
+        if(session('sort_key2')<>""){
+            $StudentQuery =$StudentQuery->orderBy(session('sort_key2'), session('asc_desc2'));
+        }
+
         $REQUEST_array=explode("page=", $_SERVER['REQUEST_URI']);
         if(isset($REQUEST_array[1])){
             session(['page_history' => $REQUEST_array[1]]);

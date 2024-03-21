@@ -320,15 +320,15 @@ class TeachersController extends Controller
     public function in_out_manage(Request $request)
     {
         $student_serial=$request->student_serial;
-        Log::alert('student_serial='.$student_serial);
+        //Log::alert('student_serial='.$student_serial);
         $student_serial_length=strlen($student_serial);
         $StudentInfSql=Student::where('serial_student','=',$student_serial);
         $StudentInf=$StudentInfSql->first();
         //Log::info($StudentInfSql);
         
-        Log::alert('email='.$StudentInf->email);
-        if($StudentInf->email===null){
-            Log::alert('email=null');
+        //Log::alert('email='.$StudentInf->email);
+        if(empty($StudentInf->email)){
+            //Log::alert('email=null');
             $target_item_array['seated_type']='NoAddress';
             $target_item_array['name_sei']=$StudentInf->name_sei;
             $target_item_array['name_mei']=$StudentInf->name_mei;

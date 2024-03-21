@@ -22,12 +22,8 @@ class ListStudents extends Component
     public $orderColumn = "serial_student";
     public $sortOrder = "asc";
     public $StudentQuery="";
-    /*
+
     public function registered(){
-        //Log::info($obj);
-        //Log::alert('registered_flg='.session('registered_flg'));
-        //Log::alert('unregistered_flg='.session('unregistered_flg'));
-        //Log::alert('withdrawn_flg='.session('withdrawn_flg'));
         if(session('registered_flg')=="checked"){
             session(['registered_flg' => ""]);
         }else{
@@ -50,7 +46,7 @@ class ListStudents extends Component
             session(['withdrawn_flg' => "checked"]);
         }
     }
-    */
+
     public function searchClear(){
 		$this->serch_key_p="";
 		$this->kensakukey="";
@@ -106,6 +102,7 @@ class ListStudents extends Component
 
 
         $StudentQuery = Student::query();
+
         if(session('registered_flg')=="checked" && session('unregistered_flg')=="" && session('withdrawn_flg')==""){
             $users = $StudentQuery->where('name_sei','<>',null)
                     ->Where(function($query) {

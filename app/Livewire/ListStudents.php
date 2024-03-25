@@ -60,7 +60,7 @@ class ListStudents extends Component
 		$this->kensakukey="";
 
 		session(['serchKey' => '']);
-        session(['sort_key2' => 'serial_student']);
+        //session(['sort_key2' => 'serial_student']);
     }
 
     public function search_from_top_menu(Request $request){
@@ -105,6 +105,7 @@ class ListStudents extends Component
 
         if(session('registered_flg')=="checked" && session('unregistered_flg')=="" && session('withdrawn_flg')==""){
             $users = $StudentQuery->where('name_sei','<>',null)
+                    ->where('name_sei','<>',"")
                     ->Where(function($query) {
                         $query->where('grade','=',null)
                                 ->orwhere('grade','<>','退会');
@@ -175,10 +176,14 @@ class ListStudents extends Component
                 }
             }
         }
-        if(session('sort_key2')<>""){
+        /*
+        log::alert('sort_key2='.session('sort_key2'));
+        log::alert('asc_desc2='.session('asc_desc2'));
+        //if(session('sort_key2')<>"" or empty(session('sort_key2'))){
+        if(!empty(session('sort_key2'))){
             $StudentQuery =$StudentQuery->orderBy(session('sort_key2'), session('asc_desc2'));
         }
-
+        */
         $REQUEST_array=explode("page=", $_SERVER['REQUEST_URI']);
         if(isset($REQUEST_array[1])){
             session(['page_history' => $REQUEST_array[1]]);

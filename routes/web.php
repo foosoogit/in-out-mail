@@ -20,6 +20,11 @@ use Illuminate\Support\Facades\Log;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('show_standby_display', function(){
+    session(['student_serial' => ""]);
+    return view('admin.StandbyDisplayJQ');
+})->name('teachers.show_standby_display');
+
 Route::get('/show_rireki_for_protector', function () {
     //session(['serchKey' =>$request->studserial]);
     return view('protector.RirekiForProtector');
@@ -111,10 +116,7 @@ Route::group(['middleware' => ['auth']], function(){
             return view('admin.StandbyDisplay');
         })->name('show_standby_display');
         */
-        Route::get('show_standby_display', function(){
-            session(['student_serial' => ""]);
-            return view('admin.StandbyDisplayJQ');
-        })->name('show_standby_display');
+       
         /*
         Route::post('show_standby_display', function () {
             return view('admin.StandbyDisplay');

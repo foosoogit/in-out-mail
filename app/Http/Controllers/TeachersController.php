@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Storage;
 class TeachersController extends Controller
 {
     public function __construct(){
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     public function execute_mail_delivery(Request $request){
@@ -48,7 +48,7 @@ class TeachersController extends Controller
             $i=0;
             foreach($to_email_array as $target_email){
                 //Log::alert('name-protector='.$protector_array[$i]);
-                log::alert("validateMail=".OtherFunc::validateMail($target_email));
+                //log::alert("validateMail=".OtherFunc::validateMail($target_email));
                 if(OtherFunc::validateMail($target_email)==null && !empty($target_email)){
                     $target_item_array['msg']=str_replace('[name-protector]', $protector_array[$i], $msg);
                     //$target_item_array['to_email']=$target_email;
@@ -96,9 +96,9 @@ class TeachersController extends Controller
         $target_student_inf=MailDelivery::where('id','=',$request->mail_serial)->first('student_serial');
         $student_serial_array=explode(',', $target_student_inf->student_serial);
         foreach($student_serial_array as $serial){
-            Log::alert("serial=".$serial);
+            //Log::alert("serial=".$serial);
             $res=Student::where('serial_student','=',str_replace("F_","", $serial))->first();
-            Log::alert("serial 2=".str_replace("F_","", $serial));
+            //Log::alert("serial 2=".str_replace("F_","", $serial));
             if(str_contains($serial, "F_")){
                 //$serial=str_replace($serial, "", "F_");
                 $student_inf_array[]="×)".$res->name_sei." ".$res->name_mei."(".$res->grade.")";

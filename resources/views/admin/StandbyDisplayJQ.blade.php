@@ -94,9 +94,14 @@
 						document.getElementById("seated_type").innerText =  item_json.name_sei + ' '+item_json.name_mei+'さんのメールアドレスが設定されていません。';
 						$('#name_fadeout_alert').show();
 						//send_mail(data);
-					}else{
+					}else if(item_json.seated_type=="NoSerial"){
 						audio_false.play();
 						document.getElementById("seated_type").innerText = '登録データが見つかりません。';
+						$('#name_fadeout_alert').show();
+						//dispNone();
+					}else{
+						audio_false.play();
+						document.getElementById("seated_type").innerText = 'エラー';
 						$('#name_fadeout_alert').show();
 						//dispNone();
 					}
@@ -108,7 +113,6 @@
 					if(XMLHttpRequest.status==419){
 						alert('ログインしてください。');
 						location.href = 'show_standby_display';
-						
 					}
 					/*
 					alert(XMLHttpRequest.status);
@@ -140,13 +144,14 @@
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				}
 			}).done(function (data) {
-				//console.log("ok");
+				const item_json = JSON.parse(data);
+				console.log("flg"+data.flg);
 				data=null;
 			}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
 				alert(XMLHttpRequest.status);
 				alert(textStatus);
 				alert(errorThrown);	
-				alert('エラー');
+				alert('エラー2');
 			});
 			$('#name_fadeout_alert').show();		
 		}

@@ -277,8 +277,8 @@ class TeachersController extends Controller
             $msg=InitConsts::MsgIn();
             $sbj=InitConsts::sbjIn();
         }else if($item_array['seated_type']=='out'){
-            $msg=InitConsts::MsgIn();
-            $sbj=InitConsts::sbjIn();
+            $msg=InitConsts::MsgOut();
+            $sbj=InitConsts::sbjOut();
         }
         log::info($item_array);
         $msg=str_replace('[name-student]', $item_array['name_sei']." ".$item_array['name_mei'], $msg);
@@ -323,8 +323,8 @@ class TeachersController extends Controller
         $student_serial_length=strlen($student_serial);
         $StudentInfSql=Student::where('serial_student','=',$student_serial);
         $StudentInf=$StudentInfSql->first();
-        Log::info($StudentInf);
-        Log::alert("empty=".empty($StudentInf));
+        //Log::info($StudentInf);
+        //Log::alert("empty=".empty($StudentInf));
         if(empty($StudentInf)){
             $target_item_array['seated_type']='NoSerial';
             //$target_item_array['name_sei']=$StudentInf->name_sei;

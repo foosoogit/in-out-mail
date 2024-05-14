@@ -64,8 +64,11 @@ class StudentController extends Controller
 
     public function send_test_mail_to_protector($stud_name,$eml_ary,$ptt_ary)
     {
-        $user = Auth::user();
-        $target_item_array['from_email']=$user->email;
+        //$user = Auth::user();
+        $from_mail_add=config('mail.from.address');
+        
+        $target_item_array['from_email']=$from_mail_add;
+        //$target_item_array['from_email']=$user->email;
         $i=0;
         foreach($eml_ary as $emal){
             $msg=InitConsts::MsgTest();

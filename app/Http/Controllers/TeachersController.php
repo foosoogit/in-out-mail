@@ -29,14 +29,16 @@ class TeachersController extends Controller
     }
 
     public function execute_mail_delivery(Request $request){
-        $user = Auth::user();
+        //$user = Auth::user();
+        $from_mail_add=config('mail.from.address');
         $msg=$request->body;
         $msg=OtherFunc::ConvertPlaceholder($msg,"body");
         $target_item_array['msg']=$msg;
         $sbj=$request->subject;
         $sbj=OtherFunc::ConvertPlaceholder($sbj,"sbj");
         $target_item_array['subject']=$sbj;
-        $target_item_array['from_email']=$user->email;
+        //$target_item_array['from_email']=$user->email;
+        $target_item_array['from_email']=$from_mail_add;
         $student_serial_array=explode(',', $request->student_serial_hdn);
         $target_stud_email_array=array();
         $send_stud_serial_array=array();
@@ -70,7 +72,8 @@ class TeachersController extends Controller
         //Log::alert("send_mail=".$send_mail);
         MailDelivery::updateOrInsert(
             ['id' => $request->id],
-            ['student_serial' => $send_stud_serial, 'date_delivered' => date("Y-m-d H:i:s"), 'to_mail_address' => $send_mail, 'student_name'=>$send_name,'from_mail_address' =>$user->email, 'subject' => $sbj, 'body' => $msg]
+            //['student_serial' => $send_stud_serial, 'date_delivered' => date("Y-m-d H:i:s"), 'to_mail_address' => $send_mail, 'student_name'=>$send_name,'from_mail_address' =>$user->email, 'subject' => $sbj, 'body' => $msg]
+            ['student_serial' => $send_stud_serial, 'date_delivered' => date("Y-m-d H:i:s"), 'to_mail_address' => $send_mail, 'student_name'=>$send_name,'from_mail_address' =>$from_mail_add, 'subject' => $sbj, 'body' => $msg]
         );
         $show_list_students_html = [];
         $show_list_students_html[] = '<iframe src="show_delivery_email_list_students" style="display:block;width:100%;height:100%;" class="h6" id="StudList_if" ></iframe>';
@@ -189,9 +192,14 @@ class TeachersController extends Controller
 
     public function send_test_mail($type)
     {
-        $user = Auth::user();
-        $target_item_array['to_email']=$user->email;
-        $target_item_array['from_email']=$user->email;
+        //$user = Auth::user();
+        $from_mail_add=config('mail.from.address');
+        
+        $target_item_array['to_email']=$from_mail_add;
+        $target_item_array['from_email']=$from_mail_add;
+
+        //$target_item_array['to_email']=$user->email;
+        //$target_item_array['from_email']=$user->email;
         if($type=="MsgIn"){
             //$msg=Storage::get('MsgIn.txt');
             $msg=InitConsts::MsgIn();

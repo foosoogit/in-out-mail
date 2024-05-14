@@ -31,7 +31,7 @@
                             <div class="row">
 								<div class="col">
                                 <x-input-label for="name_sei" value="生徒番号の読み込み" />
-                                <x-text-input type="text" class="mt-1 block w-full" name="student_serial_txt" id="student_serial_txt" autofocus />
+                                <x-text-input type="text" class="mt-1 block w-full" name="student_serial_txt" id="student_serial_txt"  style="ime-mode: disabled;" autofocus />
                                 <x-input-error class="mt-2" :messages="$errors->get('student_serial')" />
 								</div>
 								<div class="col"> 
@@ -73,7 +73,7 @@
 					}
 				}).done(function (data) {
 					const item_json = JSON.parse(data);
-					console.log("seated_type="+item_json.seated_type);
+					//console.log("seated_type="+item_json.seated_type);
 					if(item_json.seated_type=="false"){
 						audio_false.play();
 						//document.getElementById("seated_type").style.display="";
@@ -108,7 +108,7 @@
 					document.getElementById('student_serial_txt').value="";
 					document.getElementById('student_serial_txt').focus();
 					data=null;
-					window.setTimeout(dispNone, 5000);
+					window.setTimeout(dispNone, 4000);
 				}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
 					if(XMLHttpRequest.status==419){
 						alert('ログインしてください。');
@@ -157,7 +157,7 @@
 		}
 		function name_fadeOut(){
 			//$('#name_fadeout_alert').fadeOut('100');
-			$('#name_fadeout_alert').hide(5000);
+			$('#name_fadeout_alert').hide(3000);
 			//$('div').fadeOut('fast');
 		}
 		setInterval('showClock()',1000);

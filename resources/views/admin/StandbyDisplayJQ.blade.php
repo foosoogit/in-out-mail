@@ -21,9 +21,7 @@
     <div>
        <div class="py-12">
 			<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            	{{-- <div class="max-w-7xl mx-auto sm:px-6 lg:px-8"> --}}
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    {{--<div class="max-w-xl">--}}
                         <div class="flex items-center gap-4">
                             <x-primary-button onclick="location.href='{{route('menu')}}'" >メニューに戻る</x-primary-button>
                         </div>
@@ -42,7 +40,6 @@
 								<label id="seated_type" class="text-danger fs-4 display-4"></label>
 							</div>
                 </div>
-                {{--</div>--}}
             </div>
        	</div>
     </div>
@@ -73,13 +70,11 @@
 					}
 				}).done(function (data) {
 					const item_json = JSON.parse(data);
-					//console.log("seated_type="+item_json.seated_type);
 					if(item_json.seated_type=="false"){
 						audio_false.play();
 						//document.getElementById("seated_type").style.display="";
 						document.getElementById("seated_type").innerText = item_json.name_sei + ' '+item_json.name_mei+'さんの退出時間が短すぎます。';
 						$('#name_fadeout_alert').show();
-						//dispNone();
 					}else if(item_json.seated_type=="in"){
 						audio_in.play();
 						document.getElementById("seated_type").innerText =  item_json.name_sei + ' '+item_json.name_mei+'さんが入室しました。';
@@ -90,7 +85,6 @@
 						send_mail(data);
 					}else if(item_json.seated_type=="NoAddress"){
 						audio_out.play();
-						//console.log("seated_type="+item_json.seated_type);
 						document.getElementById("seated_type").innerText =  item_json.name_sei + ' '+item_json.name_mei+'さんのメールアドレスが設定されていません。';
 						$('#name_fadeout_alert').show();
 						//send_mail(data);
@@ -133,7 +127,6 @@
 		}
 
 		function send_mail(item_json){
-			//console.log("TEST1");
 			$.ajax({
 				url: 'send_mail_in_out',
 				type: 'post', // getかpostを指定(デフォルトは前者)

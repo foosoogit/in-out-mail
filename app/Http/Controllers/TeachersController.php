@@ -288,7 +288,7 @@ class TeachersController extends Controller
             $msg=InitConsts::MsgOut();
             $sbj=InitConsts::sbjOut();
         }
-        log::info($item_array);
+        //log::info($item_array);
         $msg=str_replace('[name-student]', $item_array['name_sei']." ".$item_array['name_mei'], $msg);
         $msg=str_replace('[time]', $item_array['target_time'], $msg);
         $msg=OtherFunc::ConvertPlaceholder($msg,"body");

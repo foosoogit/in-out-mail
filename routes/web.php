@@ -20,11 +20,6 @@ use Illuminate\Support\Facades\Log;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('show_standby_display', function(){
-    session(['student_serial' => ""]);
-    return view('admin.StandbyDisplayJQ');
-})->name('teachers.show_standby_display');
-
 Route::get('/show_rireki_for_protector', function () {
     //session(['serchKey' =>$request->studserial]);
     return view('protector.RirekiForProtector');
@@ -63,6 +58,11 @@ Route::view('barcode', 'barcode');
 //Route::middleware('auth')->group(function () {
 Route::group(['middleware' => ['auth']], function(){
     Route::controller(TeachersController::class)->name('teachers.')->group(function() {
+        Route::get('show_standby_display', function(){
+            session(['student_serial' => ""]);
+            return view('admin.StandbyDisplayJQ');
+        })->name('show_standby_display');
+
         Route::post('/teachers/ajax_get_mail_sending_to', [TeachersController::class,'ajax_get_mail_sending_to'])->name("ajax_get_mail_sending_to");
         Route::post('/teachers/update_MailAccount','update_MailAccount')->name('email_account.update');
         Route::get('/show_email_account_setup','show_email_account_setup')->name('show_email_account_setup');

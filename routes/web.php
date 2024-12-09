@@ -58,6 +58,12 @@ Route::view('barcode', 'barcode');
 //Route::middleware('auth')->group(function () {
 Route::group(['middleware' => ['auth']], function(){
     Route::controller(TeachersController::class)->name('teachers.')->group(function() {
+
+        Route::get('show_standby_display_QR', function(){
+            session(['student_serial' => ""]);
+            return view('admin.StandbyDisplayQRJQ');
+        })->name('show_standby_display_QR');
+
         Route::get('show_standby_display', function(){
             session(['student_serial' => ""]);
             return view('admin.StandbyDisplayJQ');

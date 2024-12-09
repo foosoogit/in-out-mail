@@ -35,6 +35,11 @@
                   <td>リーダーで読み込むときの画面です。</td>
                 </tr>
                 <tr>
+                  <th scope="row" class="display-1">1</th>
+                  <td ><a href="{{ route('teachers.show_standby_display_QR') }}">待ち受け画面(QR)</a></td>
+                  <td>スマホで直接QRコードを読み込みます。</td>
+                </tr>
+                <tr>
                   <th scope="row">2</th>
                   <td><a href="{{ route('admin.showRireki') }}">入退出履歴</a></td>
                   <td>各生徒の入退出履歴を確認できます。</td>

@@ -97,7 +97,7 @@
 	<script src="{{ asset('/js/StandbyDisplayQR.js') }}"></script>
 	<script>
 		if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-			alert("Let's get this party started-3")
+			alert("Let's get this party started-4")
 		}
 
 		//alert('ログインしてください。');
@@ -125,6 +125,9 @@
 		}
 		// QRコード読み取り実行
 		let readQR = checkImage();
+		async function getDevices() {
+  			const devices = await navigator.mediaDevices.enumerateDevices();
+		}
 	</script>
 	<script>
 		function showClock(){

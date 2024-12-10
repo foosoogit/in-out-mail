@@ -100,7 +100,8 @@
 		const video = document.getElementById('video');
 		const canvas = document.querySelector('#js-canvas');
 		const ctx = canvas.getContext('2d');
-		navigator.mediaDevices.getUserMedia({ video: true, audio: false,facingMode: { exact: "environment" } })
+		//navigator.mediaDevices.getUserMedia({ video: true, audio: false,facingMode: { exact: "environment" } })
+		navigator.mediaDevices.getUserMedia({ video: true, audio: false })
 			.then(stream => video.srcObject = stream)
 			.catch(err => alert(`${err.name} ${err.message}`));
 		const checkImage = () => {

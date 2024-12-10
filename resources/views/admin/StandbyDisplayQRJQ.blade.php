@@ -97,11 +97,11 @@
 	<script src="{{ asset('/js/StandbyDisplayQR.js') }}"></script>
 	<script>
 		if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-			alert("Let's get this party started-5")
+			alert("Let's get this party started-9")
 		}
 
 		var vi = document.querySelector('video');
-		const mode = cameraFacing ? "environment" : "user";
+		//const mode = cameraFacing ? "environment" : "user";
 		
 		//alert('ログインしてください。');
 		const video = document.getElementById('video');
@@ -113,7 +113,7 @@
 			.then(stream => video.srcObject = stream)
 			.catch(err => alert(`${err.name} ${err.message}`));
 		*/
-		navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false })
             .then(stream => vi.srcObject = stream)
             .catch(err => alert(`${err.name} ${err.message}`));
 
@@ -135,9 +135,11 @@
 		}
 		// QRコード読み取り実行
 		let readQR = checkImage();
+		/*
 		async function getDevices() {
   			const devices = await navigator.mediaDevices.enumerateDevices();
 		}
+		*/
 	</script>
 	<script>
 		function showClock(){

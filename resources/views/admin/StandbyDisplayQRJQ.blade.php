@@ -122,7 +122,7 @@
 		}
 		*/
 		var vi = document.querySelector('video');
-		//const mode = cameraFacing ? "environment" : "user";
+		
 		
 		//alert('ログインしてください。');
 		const video = document.getElementById('video');
@@ -134,11 +134,13 @@
 			.then(stream => video.srcObject = stream)
 			.catch(err => alert(`${err.name} ${err.message}`));
 		*/
-		/*
-		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false })
+		//const mode = cameraFacing ? "environment" : "user";
+				const mode = "environment";
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: mode }, audio: false })
             .then(stream => vi.srcObject = stream)
             .catch(err => alert(`${err.name} ${err.message}`));
-		*/
+		
+
 		navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
             .then(stream => vi.srcObject = stream)
             .catch(err => alert(`${err.name} ${err.message}`));

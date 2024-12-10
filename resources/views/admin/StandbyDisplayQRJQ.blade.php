@@ -97,7 +97,7 @@
 	<script src="{{ asset('/js/StandbyDisplayQR.js') }}"></script>
 	<script>
 		if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-			alert("Let's get this party started-2")
+			alert("Let's get this party started-3")
 		}
 
 		//alert('ログインしてください。');
@@ -105,7 +105,7 @@
 		const canvas = document.querySelector('#js-canvas');
 		const ctx = canvas.getContext('2d');
 		//navigator.mediaDevices.getUserMedia({ video: true, audio: false,facingMode: { exact: "environment" } })
-		navigator.mediaDevices.getUserMedia({ video: true, audio: false,facingMode: 'user' })
+		navigator.mediaDevices.getUserMedia({ video: true, audio: false,facingMode: {exact: 'environment'} })
 			.then(stream => video.srcObject = stream)
 			.catch(err => alert(`${err.name} ${err.message}`));
 		const checkImage = () => {

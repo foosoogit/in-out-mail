@@ -21,11 +21,14 @@
        <div class="py-12">
 			<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                        <div class="flex items-center gap-4">
-                            <x-primary-button onclick="location.href='{{route('menu')}}'" >メニューに戻る</x-primary-button>
-                        </div>
-							<div class="row height:25rem" style="width: 20rem;">待ち受け画面</div>
-                            <div class="row">
+                    <div class="flex items-center gap-4">
+                        <x-primary-button onclick="location.href='{{route('menu')}}'" >メニューに戻る</x-primary-button>
+                    </div>
+					<div class="flex items-center gap-4">
+                        <x-primary-button onclick="test('test1')" >テスト</x-primary-button>
+                    </div>
+					<div class="row height:25rem" style="width: 20rem;">待ち受け画面</div>
+                    <div class="row">
 								{{--
 								<div class="col">
 									<div id="photo-area"  class="viewport">
@@ -36,11 +39,29 @@
 								<div class="col">
 									<div id="interactive" class="viewport"></div>
 								</div>
-								--}}
+								
 								<div class="col">
 									<div id="container"></div>
 									<p id="process"></p>
 									<p id="result"></p>
+								</div>
+								--}}
+						<div class="col">
+							<div>
+								<video id="video" autoplay></video>
+								<div style="display:none">
+									<canvas id="js-canvas"></canvas>
+								</div>
+							</div>
+						</div>
+								{{--
+								<div class="col">
+									<button type="button" class="btn btn-fab btn-round btn-info btc_scan" name="btc_scan"></button>
+								</div>
+								<div class="col">
+									<div class="scan_area" style="height: 100vh;">
+										<div id="photo-area" class="viewport"></div>
+									</div>
 								</div>
 								
 								<div class="col">
@@ -48,9 +69,10 @@
 									<x-text-input type="text" class="mt-1 block w-full" name="student_serial_txt" id="student_serial_txt"  style="ime-mode: disabled;" autofocus />
 									<x-input-error class="mt-2" :messages="$errors->get('student_serial')" />
 								</div>
-								<div class="col"> 
-									<p id="RealtimeClockArea" class="display-1 lead"></p>
-								</div>
+								--}}
+						<div class="col"> 
+							<p id="RealtimeClockArea" class="display-1 lead"></p>
+						</div>
 								{{--
 								<div class="col"> 
 									<button id="startButton">Start Scan</button>
@@ -58,10 +80,10 @@
     								<div id="scanResult"></div>
 								</div>
 								--}}
-                            </div>
-							<div class="alert alert-primary alert-dismissible fade show" id="name_fadeout_alert" style="display: none">
-								<label id="seated_type" class="text-danger fs-4 display-4"></label>
-							</div>
+                    </div>
+					<div class="alert alert-primary alert-dismissible fade show" id="name_fadeout_alert" style="display: none">
+						<label id="seated_type" class="text-danger fs-4 display-4"></label>
+					</div>
                 </div>
             </div>
        	</div>
@@ -69,9 +91,51 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-	<script src="https://unpkg.com/@ericblade/quagga2@1.7.4/dist/quagga.min.js"></script>
+	{{--<script src="https://unpkg.com/@ericblade/quagga2@1.7.4/dist/quagga.min.js"></script>--}}
+	<script src="https://cdn.jsdelivr.net/npm/jsqr@latest/dist/jsQR.min.js"></script>
 	<script src="//cdn.jsdelivr.net/gh/mtaketani113/jquery-barcode@master/jquery-barcode.js"></script>
 	<script src="{{ asset('/js/StandbyDisplayQR.js') }}"></script>
+	<script>
+		//alert('ログインしてください。');
+		const video = document.getElementById('video');
+		const canvas = document.querySelector('#js-canvas');
+		const ctx = canvas.getContext('2d');
+		navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+			.then(stream => video.srcObject = stream)
+			.catch(err => alert(`${err.name} ${err.message}`));
+		const checkImage = () => {
+		  // 取得している動画をCanvasに描画
+		  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+		  // Canvasからデータを取得
+		  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		  // jsQRに渡す
+		  const code = jsQR(imageData.data, canvas.width, canvas.height);
+		  // 失敗したら再度実行
+		  if (code) {
+			alert(code.data);
+			setTimeout(() => { checkImage() }, 200);
+		  } else {
+			setTimeout(() => { checkImage() }, 200);
+		  }
+		}
+		// QRコード読み取り実行
+		let readQR = checkImage();
+	</script>
+	<script>
+		function showClock(){
+			var nowTime = new Date();
+			var nowHour = set2fig( nowTime.getHours() );
+			var nowMin  = set2fig( nowTime.getMinutes() );
+			var nowSec  = set2fig( nowTime.getSeconds() );
+			var msg = nowHour + ":" + nowMin + ":" + nowSec;
+			document.getElementById("RealtimeClockArea").innerHTML = msg;
+		}
+	</script>
+	<script>
+		function test(bun){
+			alert(bun);
+		}
+	</script>
 	{{-- 
 	<script>
 		Quagga.init({
@@ -94,6 +158,7 @@
 		});
 	</script>
 	 --}}
+	 {{--
 	<script type="text/javascript">
 		var audio_out= new Audio("time_out.mp3");
 		var audio_in= new Audio("true.mp3");
@@ -217,5 +282,6 @@
 			document.getElementById("RealtimeClockArea").innerHTML = msg;
 		}
 	</script>
+	--}}
 </body>
 </html>

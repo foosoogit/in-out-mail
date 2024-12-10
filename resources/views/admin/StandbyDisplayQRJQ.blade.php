@@ -145,11 +145,11 @@
 
 		const checkImage = () => {
 		  // 取得している動画をCanvasに描画
-			ctx.drawImage(video, 0, 0, canvas.width/2, canvas.height/2);
+			ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 			// Canvasからデータを取得
-			const imageData = ctx.getImageData(0, 0, canvas.width/2, canvas.height/2);
+			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 			// jsQRに渡す
-			const code = jsQR(imageData.data, canvas.width/2, canvas.height/2);
+			const code = jsQR(imageData.data, canvas.width, canvas.height);
 			// 失敗したら再度実行
 			if (code) {
 				//alert(code.data);

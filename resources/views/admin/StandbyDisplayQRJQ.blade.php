@@ -96,6 +96,10 @@
 	<script src="//cdn.jsdelivr.net/gh/mtaketani113/jquery-barcode@master/jquery-barcode.js"></script>
 	<script src="{{ asset('/js/StandbyDisplayQR.js') }}"></script>
 	<script>
+		if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
+			alert("Let's get this party started")
+		}
+
 		//alert('ログインしてください。');
 		const video = document.getElementById('video');
 		const canvas = document.querySelector('#js-canvas');
@@ -106,18 +110,18 @@
 			.catch(err => alert(`${err.name} ${err.message}`));
 		const checkImage = () => {
 		  // 取得している動画をCanvasに描画
-		ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-		  // Canvasからデータを取得
-		const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-		  // jsQRに渡す
-		const code = jsQR(imageData.data, canvas.width, canvas.height);
-		  // 失敗したら再度実行
-		if (code) {
-			alert(code.data);
-			setTimeout(() => { checkImage() }, 200);
-		} else {
-			setTimeout(() => { checkImage() }, 200);
-		}
+			ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+			// Canvasからデータを取得
+			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			// jsQRに渡す
+			const code = jsQR(imageData.data, canvas.width, canvas.height);
+			// 失敗したら再度実行
+			if (code) {
+				alert(code.data);
+				setTimeout(() => { checkImage() }, 200);
+			} else {
+				setTimeout(() => { checkImage() }, 200);
+			}
 		}
 		// QRコード読み取り実行
 		let readQR = checkImage();

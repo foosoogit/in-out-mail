@@ -31,6 +31,9 @@
 					 --}}
 					 
 					<div class="row height:25rem" style="width: 20rem;">待ち受け画面</div>
+					<div class="alert alert-primary alert-dismissible fade show" id="name_fadeout_alert" style="display: none">
+						<label id="seated_type" class="text-danger fs-4 display-4"></label>
+					</div>
 					<div>
 						<video id="video" autoplay></video>
 						<div style="display:none">
@@ -92,10 +95,12 @@
 								</div>
 								--}}
                     </div>
-
+					{{--
 					<div class="alert alert-primary alert-dismissible fade show" id="name_fadeout_alert" style="display: none">
 						<label id="seated_type" class="text-danger fs-4 display-4"></label>
 					</div>
+					--}}
+					
                 </div>
             </div>
        	</div>
@@ -111,10 +116,11 @@
 		var audio_out= new Audio("time_out.mp3");
 		var audio_in= new Audio("true.mp3");
 		var audio_false= new Audio("false.mp3");
+		/*
 		if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
 			alert("Let's get this party started-10")
 		}
-
+		*/
 		var vi = document.querySelector('video');
 		//const mode = cameraFacing ? "environment" : "user";
 		
@@ -139,14 +145,14 @@
 
 		const checkImage = () => {
 		  // 取得している動画をCanvasに描画
-			ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+			ctx.drawImage(video, 0, 0, canvas.width/2, canvas.height/2);
 			// Canvasからデータを取得
-			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			const imageData = ctx.getImageData(0, 0, canvas.width/2, canvas.height/2);
 			// jsQRに渡す
-			const code = jsQR(imageData.data, canvas.width, canvas.height);
+			const code = jsQR(imageData.data, canvas.width/2, canvas.height/2);
 			// 失敗したら再度実行
 			if (code) {
-				alert(code.data);
+				//alert(code.data);
 				in_out_manage(code.data)
 				setTimeout(() => { checkImage() }, 200);
 			} else {
@@ -161,7 +167,7 @@
 		}
 		*/
 		function in_out_manage(student_serial){
-			alert("serial="+student_serial);
+			//alert("serial="+student_serial);
 			$.ajax({
 					//url: 'send_mail',
 				url: 'in_out_manage',

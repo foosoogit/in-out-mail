@@ -24,10 +24,19 @@
                     <div class="flex items-center gap-4">
                         <x-primary-button onclick="location.href='{{route('menu')}}'" >メニューに戻る</x-primary-button>
                     </div>
+					{{-- 
 					<div class="flex items-center gap-4">
                         <x-primary-button onclick="test('test1')" >テスト</x-primary-button>
                     </div>
+					 --}}
+					 
 					<div class="row height:25rem" style="width: 20rem;">待ち受け画面</div>
+					<div>
+						<video id="video" autoplay></video>
+						<div style="display:none">
+							<canvas id="js-canvas"></canvas>
+						</div>
+					</div>
                     <div class="row">
 								{{--
 								<div class="col">
@@ -46,6 +55,7 @@
 									<p id="result"></p>
 								</div>
 								--}}
+						{{-- 
 						<div class="col">
 							<div>
 								<video id="video" autoplay></video>
@@ -54,6 +64,7 @@
 								</div>
 							</div>
 						</div>
+						 --}}
 								{{--
 								<div class="col">
 									<button type="button" class="btn btn-fab btn-round btn-info btc_scan" name="btc_scan"></button>
@@ -81,6 +92,7 @@
 								</div>
 								--}}
                     </div>
+
 					<div class="alert alert-primary alert-dismissible fade show" id="name_fadeout_alert" style="display: none">
 						<label id="seated_type" class="text-danger fs-4 display-4"></label>
 					</div>
@@ -96,8 +108,11 @@
 	<script src="//cdn.jsdelivr.net/gh/mtaketani113/jquery-barcode@master/jquery-barcode.js"></script>
 	<script src="{{ asset('/js/StandbyDisplayQR.js') }}"></script>
 	<script>
+		var audio_out= new Audio("time_out.mp3");
+		var audio_in= new Audio("true.mp3");
+		var audio_false= new Audio("false.mp3");
 		if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-			alert("Let's get this party started-9")
+			alert("Let's get this party started-10")
 		}
 
 		var vi = document.querySelector('video');
@@ -113,10 +128,14 @@
 			.then(stream => video.srcObject = stream)
 			.catch(err => alert(`${err.name} ${err.message}`));
 		*/
+		/*
 		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false })
             .then(stream => vi.srcObject = stream)
             .catch(err => alert(`${err.name} ${err.message}`));
-
+		*/
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+            .then(stream => vi.srcObject = stream)
+            .catch(err => alert(`${err.name} ${err.message}`));
 
 		const checkImage = () => {
 		  // 取得している動画をCanvasに描画
@@ -128,6 +147,7 @@
 			// 失敗したら再度実行
 			if (code) {
 				alert(code.data);
+				in_out_manage(code.data)
 				setTimeout(() => { checkImage() }, 200);
 			} else {
 				setTimeout(() => { checkImage() }, 200);
@@ -140,6 +160,67 @@
   			const devices = await navigator.mediaDevices.enumerateDevices();
 		}
 		*/
+		function in_out_manage(student_serial){
+			alert("serial="+student_serial);
+			$.ajax({
+					//url: 'send_mail',
+				url: 'in_out_manage',
+				type: 'post', // getかpostを指定(デフォルトは前者)
+				dataType: 'text', // 「json」を指定するとresponseがJSONとしてパースされたオブジェクトになる
+				scriptCharset: 'utf-8',
+				data: {"student_serial":student_serial},
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			}).done(function (data) {
+				const item_json = JSON.parse(data);
+				alert("seated_type="+item_json.seated_type);
+				if(item_json.seated_type=="false"){
+					audio_false.play();
+					//document.getElementById("seated_type").style.display="";
+					document.getElementById("seated_type").innerText = item_json.name_sei + ' '+item_json.name_mei+'さんの退出時間が短すぎます。';
+					$('#name_fadeout_alert').show();
+				}else if(item_json.seated_type=="in"){
+					audio_in.play();
+					document.getElementById("seated_type").innerText =  item_json.name_sei + ' '+item_json.name_mei+'さんが入室しました。';
+					send_mail(data);
+				}else if(item_json.seated_type=="out"){
+					audio_out.play();
+					document.getElementById("seated_type").innerText =  item_json.name_sei + ' '+item_json.name_mei+'さんが退室しました。';
+					send_mail(data);
+				}else if(item_json.seated_type=="NoAddress"){
+					audio_out.play();
+					document.getElementById("seated_type").innerText =  item_json.name_sei + ' '+item_json.name_mei+'さんのメールアドレスが設定されていません。';
+					$('#name_fadeout_alert').show();
+						//send_mail(data);
+				}else if(item_json.seated_type=="NoSerial"){
+					audio_false.play();
+					document.getElementById("seated_type").innerText = '登録データが見つかりません。';
+					$('#name_fadeout_alert').show();
+						//dispNone();
+				}else{
+					audio_false.play();
+					document.getElementById("seated_type").innerText = 'エラー';
+					$('#name_fadeout_alert').show();
+					//dispNone();
+				}
+				document.getElementById('student_serial_txt').value="";
+				document.getElementById('student_serial_txt').focus();
+				data=null;
+				window.setTimeout(dispNone, 1000);
+			}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				if(XMLHttpRequest.status==419){
+					alert('ログインしてください。');
+					location.href = 'show_standby_display';
+				}
+				/*
+					alert(XMLHttpRequest.status);
+					alert(textStatus);
+					alert(errorThrown);	
+					alert('エラー');
+				*/
+			});
+		}
 	</script>
 	<script>
 		function showClock(){

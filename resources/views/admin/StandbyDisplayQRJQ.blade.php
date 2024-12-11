@@ -122,8 +122,6 @@
 		}
 		*/
 		var vi = document.querySelector('video');
-		
-		
 		//alert('ログインしてください。');
 		const video = document.getElementById('video');
 		const canvas = document.querySelector('#js-canvas');
@@ -135,7 +133,7 @@
 			.catch(err => alert(`${err.name} ${err.message}`));
 		*/
 		//const mode = cameraFacing ? "environment" : "user";
-				const mode = "environment";
+		const mode = "environment";
 		navigator.mediaDevices.getUserMedia({ video: { facingMode: mode }, audio: false })
             .then(stream => vi.srcObject = stream)
             .catch(err => alert(`${err.name} ${err.message}`));
@@ -156,7 +154,7 @@
 			if (code) {
 				//alert(code.data);
 				in_out_manage(code.data)
-				setTimeout(() => { checkImage() }, 200);
+				setTimeout(() => { checkImage() }, 5000);
 			} else {
 				setTimeout(() => { checkImage() }, 200);
 			}
@@ -212,8 +210,8 @@
 					$('#name_fadeout_alert').show();
 					//dispNone();
 				}
-				document.getElementById('student_serial_txt').value="";
-				document.getElementById('student_serial_txt').focus();
+				//document.getElementById('student_serial_txt').value="";
+				//document.getElementById('student_serial_txt').focus();
 				data=null;
 				window.setTimeout(dispNone, 1000);
 			}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -229,8 +227,7 @@
 				*/
 			});
 		}
-	</script>
-	<script>
+
 		function showClock(){
 			var nowTime = new Date();
 			var nowHour = set2fig( nowTime.getHours() );
@@ -239,10 +236,58 @@
 			var msg = nowHour + ":" + nowMin + ":" + nowSec;
 			document.getElementById("RealtimeClockArea").innerHTML = msg;
 		}
-	</script>
-	<script>
-		function test(bun){
-			alert(bun);
+
+		function name_fadeOut(){
+			//$('#name_fadeout_alert').fadeOut('100');
+			$('#name_fadeout_alert').hide(1000);
+			//$('div').fadeOut('fast');
+		}
+
+		function dispNone(){
+			document.getElementById("name_fadeout_alert").style.display="none";
+			//document.getElementById("student_serial_txt").disabled=false;
+			//document.getElementById("student_serial_txt").focus();
+		}
+
+		function send_mail(item_json){
+			$.ajax({
+				url: 'send_mail_in_out',
+				type: 'post', // getかpostを指定(デフォルトは前者)
+				dataType: 'json', // 「json」を指定するとresponseがJSONとしてパースされたオブジェクトになる
+				scriptCharset: 'utf-8',
+				data: {"item_json":item_json},
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			}).done(function (data) {
+				const item_json = JSON.parse(data);
+				console.log("flg"+data.flg);
+				data=null;
+			}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				alert(XMLHttpRequest.status);
+				alert(textStatus);
+				alert(errorThrown);	
+				alert('エラー2');
+			});
+			$('#name_fadeout_alert').show();		
+		}
+		
+		setInterval('showClock()',1000);
+
+		function set2fig(num) {
+			// 桁数が1桁だったら先頭に0を加えて2桁に調整する
+			var ret;
+			if( num < 10 ) { ret = "0" + num; }
+			else { ret = num; }
+			return ret;
+		}
+		function showClock(){
+			var nowTime = new Date();
+			var nowHour = set2fig( nowTime.getHours() );
+			var nowMin  = set2fig( nowTime.getMinutes() );
+			var nowSec  = set2fig( nowTime.getSeconds() );
+			var msg = nowHour + ":" + nowMin + ":" + nowSec;
+			document.getElementById("RealtimeClockArea").innerHTML = msg;
 		}
 	</script>
 	{{-- 

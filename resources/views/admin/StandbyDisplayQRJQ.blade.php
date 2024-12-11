@@ -105,6 +105,7 @@
             </div>
        	</div>
     </div>
+	<input type="hidden" value="{{public_path('audio/')}}" id="audio_path_hdn" >
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -113,9 +114,11 @@
 	<script src="//cdn.jsdelivr.net/gh/mtaketani113/jquery-barcode@master/jquery-barcode.js"></script>
 	<script src="{{ asset('/js/StandbyDisplayQR.js') }}"></script>
 	<script>
-		var audio_out= new Audio("time_out.mp3");
-		var audio_in= new Audio("true.mp3");
-		var audio_false= new Audio("false.mp3");
+		const hidden_interval=3000;
+		audio_path=document.getElementById("audio_path_hdn").value;
+		var audio_out= new Audio(audio_path+"time_out.mp3");
+		var audio_in= new Audio(audio_path+"true.mp3");
+		var audio_false= new Audio(audio_path+"false.mp3");
 		/*
 		if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
 			alert("Let's get this party started-10")
@@ -134,15 +137,15 @@
 		*/
 		//const mode = cameraFacing ? "environment" : "user";
 		const mode = "environment";
-		navigator.mediaDevices.getUserMedia({ video: { facingMode: mode }, audio: false })
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: mode }, audio: false})
             .then(stream => vi.srcObject = stream)
             .catch(err => alert(`${err.name} ${err.message}`));
 		
-
+		/*
 		navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
             .then(stream => vi.srcObject = stream)
             .catch(err => alert(`${err.name} ${err.message}`));
-
+		*/
 		const checkImage = () => {
 		  // 取得している動画をCanvasに描画
 			ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -154,9 +157,9 @@
 			if (code) {
 				//alert(code.data);
 				in_out_manage(code.data)
-				setTimeout(() => { checkImage() }, 5000);
+				setTimeout(() => { checkImage() }, hidden_interval);
 			} else {
-				setTimeout(() => { checkImage() }, 200);
+				setTimeout(() => { checkImage() }, hidden_interval);
 			}
 		}
 		// QRコード読み取り実行
@@ -180,7 +183,7 @@
 				}
 			}).done(function (data) {
 				const item_json = JSON.parse(data);
-				alert("seated_type="+item_json.seated_type);
+				//alert("seated_type="+item_json.seated_type);
 				if(item_json.seated_type=="false"){
 					audio_false.play();
 					//document.getElementById("seated_type").style.display="";
@@ -213,7 +216,7 @@
 				//document.getElementById('student_serial_txt').value="";
 				//document.getElementById('student_serial_txt').focus();
 				data=null;
-				window.setTimeout(dispNone, 1000);
+				window.setTimeout(dispNone, 3000);
 			}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
 				if(XMLHttpRequest.status==419){
 					alert('ログインしてください。');
@@ -239,7 +242,7 @@
 
 		function name_fadeOut(){
 			//$('#name_fadeout_alert').fadeOut('100');
-			$('#name_fadeout_alert').hide(1000);
+			$('#name_fadeout_alert').hide(hidden_interval);
 			//$('div').fadeOut('fast');
 		}
 

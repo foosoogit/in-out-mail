@@ -32,55 +32,55 @@
                 <tr>
                   <th scope="row" class="display-1">1</th>
                   <td ><a href="{{ route('teachers.show_standby_display') }}">待ち受け画面</a></td>
-                  <td>リーダーで読み込むときの画面です。</td>
+                  <td>コードリーダーで読み込みます。</td>
                 </tr>
                 <tr>
-                  <th scope="row" class="display-1">1</th>
+                  <th scope="row" class="display-1">2</th>
                   <td ><a href="{{ route('teachers.show_standby_display_QR') }}">待ち受け画面(QR)</a></td>
                   <td>スマホで直接QRコードを読み込みます。</td>
                 </tr>
                 <tr>
-                  <th scope="row">2</th>
+                  <th scope="row">3</th>
                   <td><a href="{{ route('admin.showRireki') }}">入退出履歴</a></td>
                   <td>各生徒の入退出履歴を確認できます。</td>
                 </tr>
                 <tr>
-                  <th scope="row">3</th>
+                  <th scope="row">4</th>
                   <td><a href="{{ route('teachers.show_delivery_email.get') }}">メール配信</a></td>
                   <td>保護者に一斉メールを配信できます。（配信先選択可能）</td>
                 </tr>
                 <tr>
-                  <th scope="row">4</th>
+                  <th scope="row">5</th>
                   <td><a href="{{ route('Students.List.get') }}">生徒一覧（修正・退会）</a></td>
                   <td>生徒一覧、修正、退会処理できます。</td>
                 </tr>
                 <tr>
-                  <th scope="row">5</th>
+                  <th scope="row">6</th>
                   <td><a href="{{ route('Students.Create') }}">新規生徒登録</a></td>
                   <td>新規生徒登録</td>
                 </tr>
                 <tr>
-                  <th scope="row">6</th>
+                  <th scope="row">7</th>
                   <td><a href="{{ route('protector.login') }}">保護者用入退出確認ページ</a></td>
                   <td>保護者が生徒の入退出履歴を確認できるページです。https://jyuku-in-out-mail.net/login_protector</td>
                 </tr>
                 <tr>
-                  <th scope="row">7</th>
+                  <th scope="row">8</th>
                   <td><a href="{{ route('teachers.index') }}">講師登録・追加・削除</a></td>
                   <td>講師の登録・追加・削除</td>
                 </tr>
                 <tr>
-                  <th scope="row">8</th>
+                  <th scope="row">9</th>
                   <td><a href="{{ route('teachers.show_setting') }}">環境設定</a></td>
                   <td>塾名/対応学年/コース/入室→退出までの最短時間/一覧表に表示させる行数/テストメール送信/入退室時メッセージ</td>
                 </tr>
                 <tr>
-                  <th scope="row">9</th>
+                  <th scope="row">10</th>
                   <td><a href="{{ route('teachers.show_email_account_setup') }}">メールアカウントのセットアップ</a></td>
                   <td>メールアカウントをセットアップします。</td>
                 </tr>
                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-70">
-                  <th scope="row">10</th>
+                  <th scope="row">11</th>
                   <td>
                     <form action="{{ route('logout') }}" method="post">@csrf
                       <input type="submit" value="ログアウト">

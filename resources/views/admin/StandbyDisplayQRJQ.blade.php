@@ -14,13 +14,14 @@
 	{{-- @livewireStyles --}}
 	<!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-	<link rel="stylesheet" href="{{ asset('/css/StandbyDisplayQR.css') }}" crossorigin="anonymous">
+	{{-- <link rel="stylesheet" href="{{ asset('/css/StandbyDisplayQR.css') }}" crossorigin="anonymous"> --}}
+	<link rel="stylesheet" href="{{ asset('/css/StandbyDisplayQR.css?20241201') }}">
 </head>
 <body class="font-sans antialiased h1">
     <div>
        <div class="py-12">
 			<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                {{-- <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg"> --}}
                     <div class="flex items-center gap-4">
                         <x-primary-button onclick="location.href='{{route('menu')}}'" >メニューに戻る</x-primary-button>
                     </div>
@@ -30,16 +31,27 @@
                     </div>
 					 --}}
 					 
-					<div class="row height:25rem" style="width: 20rem;">待ち受け画面</div>
+					<div class="row height:25rem" style="width: 20rem;" id="matiuke">待ち受け画面</div>
 					<div class="alert alert-primary alert-dismissible fade show" id="name_fadeout_alert" style="display: none">
 						<label id="seated_type" class="text-danger fs-4 display-4"></label>
 					</div>
+					{{-- 
 					<div>
 						<video id="video" autoplay></video>
 						<div style="display:none">
 							<canvas id="js-canvas"></canvas>
 						</div>
 					</div>
+					 --}}
+					<span id="qr-msg" class="fs-3">QRコード: 見つかりません</span>
+					<div>
+						<div id="wrapper">
+							<video id="video" autoplay muted playsinline></video>
+							<canvas id="camera-canvas"></canvas>
+							<canvas id="rect-canvas"></canvas>
+						</div>
+					</div>
+
                     <div class="row">
 								{{--
 								<div class="col">
@@ -100,8 +112,7 @@
 						<label id="seated_type" class="text-danger fs-4 display-4"></label>
 					</div>
 					--}}
-					
-                </div>
+                {{--</div>--}}
             </div>
        	</div>
     </div>
@@ -112,7 +123,7 @@
 	{{--<script src="https://unpkg.com/@ericblade/quagga2@1.7.4/dist/quagga.min.js"></script>--}}
 	<script src="https://cdn.jsdelivr.net/npm/jsqr@latest/dist/jsQR.min.js"></script>
 	<script src="//cdn.jsdelivr.net/gh/mtaketani113/jquery-barcode@master/jquery-barcode.js"></script>
-	<script src="{{ asset('/js/StandbyDisplayQR.js') }}"></script>
+	{{--  <script src="{{ asset('/js/StandbyDisplayQR.js') }}"></script>--}}
 	<script>
 		const hidden_interval=3000;
 		audio_path=document.getElementById("audio_path_hdn").value;
@@ -124,28 +135,90 @@
 			alert("Let's get this party started-10")
 		}
 		*/
-		var vi = document.querySelector('video');
-		//alert('ログインしてください。');
 		const video = document.getElementById('video');
+		let contentWidth;
+		let contentHeight;
+		
+		const media = navigator.mediaDevices.getUserMedia({ audio: false, video: {width:640, height:480} })
+   			.then((stream) => {
+				video.srcObject = stream;
+				video.onloadeddata = () => {
+					video.play();
+					contentWidth = video.clientWidth;
+					contentHeight = video.clientHeight;
+					canvasUpdate(); // 次で記述
+					checkImage(); // 次で記述
+      			}
+   			}).catch((e) => {
+      			console.log(e);
+   			});
+		
+		// カメラ映像のキャンバス表示
+		const cvs = document.getElementById('camera-canvas');
+		const ctx = cvs.getContext('2d');
+		const canvasUpdate = () => {
+   			cvs.width = contentWidth;
+   			cvs.height = contentHeight;
+   			ctx.drawImage(video, 0, 0, contentWidth, contentHeight);
+   			requestAnimationFrame(canvasUpdate);
+		}
+		// QRコードの検出
+		const rectCvs = document.getElementById('rect-canvas');
+		const rectCtx =  rectCvs.getContext('2d');
+		const checkImage = () => {
+			// imageDataを作る
+			const imageData = ctx.getImageData(0, 0, contentWidth, contentHeight);
+			// jsQRに渡す
+			const code = jsQR(imageData.data, contentWidth, contentHeight);
+
+			// 検出結果に合わせて処理を実施
+			if (code) {
+				console.log("QRcodeが見つかりました", code);
+				drawRect(code.location);
+				document.getElementById('qr-msg').textContent = `QRコード: ${code.data}`;
+				in_out_manage(code.data);
+			} else {
+				console.log("QRcodeが見つかりません…", code);
+				rectCtx.clearRect(0, 0, contentWidth, contentHeight);
+				document.getElementById('qr-msg').textContent = `QRコード: 見つかりません`;
+			}
+			setTimeout(()=>{ checkImage() }, 500);
+		}
+
+		// 四辺形の描画
+		const drawRect = (location) => {
+			rectCvs.width = contentWidth;
+			rectCvs.height = contentHeight;
+			drawLine(location.topLeftCorner, location.topRightCorner);
+			drawLine(location.topRightCorner, location.bottomRightCorner);
+			drawLine(location.bottomRightCorner, location.bottomLeftCorner);
+			drawLine(location.bottomLeftCorner, location.topLeftCorner)
+		}
+
+		// 線の描画
+		const drawLine = (begin, end) => {
+			rectCtx.lineWidth = 4;
+			rectCtx.strokeStyle = "#F00";
+			rectCtx.beginPath();
+			rectCtx.moveTo(begin.x, begin.y);
+			rectCtx.lineTo(end.x, end.y);
+			rectCtx.stroke();
+		}
+
+		/*
+		var vi = document.querySelector('video');
+		//const video = document.getElementById('video');
+		//alert('ログインしてください。');
+		
 		const canvas = document.querySelector('#js-canvas');
 		const ctx = canvas.getContext('2d');
 		//navigator.mediaDevices.getUserMedia({ video: true, audio: false,facingMode: { exact: "environment" } })
-		/*
-		navigator.mediaDevices.getUserMedia({ video: true, audio: false,facingMode: {exact: 'environment'} })
-			.then(stream => video.srcObject = stream)
-			.catch(err => alert(`${err.name} ${err.message}`));
-		*/
 		//const mode = cameraFacing ? "environment" : "user";
 		const mode = "environment";
 		navigator.mediaDevices.getUserMedia({ video: { facingMode: mode }, audio: false})
             .then(stream => vi.srcObject = stream)
             .catch(err => alert(`${err.name} ${err.message}`));
 		
-		/*
-		navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
-            .then(stream => vi.srcObject = stream)
-            .catch(err => alert(`${err.name} ${err.message}`));
-		*/
 		const checkImage = () => {
 		  // 取得している動画をCanvasに描画
 			ctx.drawImage(video, 0, 0, canvas.width, canvas.height);

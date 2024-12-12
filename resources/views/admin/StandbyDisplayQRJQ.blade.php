@@ -15,7 +15,7 @@
 	<!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 	{{-- <link rel="stylesheet" href="{{ asset('/css/StandbyDisplayQR.css') }}" crossorigin="anonymous"> --}}
-	<link rel="stylesheet" href="{{ asset('/css/StandbyDisplayQR.css?20241201') }}">
+	<link rel="stylesheet" href="{{ asset('/css/StandbyDisplayQR.css?20241202') }}">
 </head>
 <body class="font-sans antialiased h1">
     <div>
@@ -43,7 +43,7 @@
 						</div>
 					</div>
 					 --}}
-					<span id="qr-msg" class="fs-3">QRコード: 見つかりません</span>
+					<span id="qr-msg" class="fs-4">QRコード: 見つかりません</span>
 					<div>
 						<div id="wrapper">
 							<video id="video" autoplay muted playsinline></video>
@@ -138,8 +138,8 @@
 		const video = document.getElementById('video');
 		let contentWidth;
 		let contentHeight;
-		
-		const media = navigator.mediaDevices.getUserMedia({ audio: false, video: {width:640, height:480} })
+		const mode = "environment";
+		const media = navigator.mediaDevices.getUserMedia({ audio: false, video: {width:640, height:480, facingMode: mode} })
    			.then((stream) => {
 				video.srcObject = stream;
 				video.onloadeddata = () => {

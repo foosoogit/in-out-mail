@@ -116,7 +116,11 @@
             </div>
        	</div>
     </div>
-	<input type="hidden" value="{{public_path('audio/')}}" id="audio_path_hdn" >
+	<input type="hidden" value="{{asset('audio/in.mp3')}}" name="sound_in_url" id="sound_in_url"/>
+	<input type="hidden" value="{{asset('audio/out.mp3')}}" name="sound_out_url" id="sound_out_url"/>
+	<input type="hidden" value="{{asset('audio/false.mp3')}}" name="sound_false_url" id="sound_false_url"/>
+
+	{{--<input type="hidden" value="{{public_path('audio/')}}" id="audio_path_hdn" >--}}
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -126,11 +130,19 @@
 	{{--  <script src="{{ asset('/js/StandbyDisplayQR.js') }}"></script>--}}
 	<script>
 		const hidden_interval=3000;
-		audio_path=document.getElementById("audio_path_hdn").value;
-		console.log(audio_path);
-		var audio_out= new Audio(audio_path+"time_out.mp3");
-		var audio_in= new Audio(audio_path+"true.mp3");
-		var audio_false= new Audio(audio_path+"false.mp3");
+		//audio_path=document.getElementById("audio_path_hdn").value;
+		//console.log(audio_path);
+		//var audio_out= new Audio(audio_path+"time_out.mp3");
+		//var audio_in= new Audio(audio_path+"true.mp3");
+		//var audio_false= new Audio(audio_path+"false.mp3"); 
+
+		var audio_in= new Audio(document.getElementById("sound_in_url").value);
+		var audio_false= new Audio(document.getElementById("sound_false_url").value);
+		var audio_out= new Audio(document.getElementById("sound_out_url").value);
+
+		//var audio_false= new Audio("/var/www/html/in-out-mail/public/audio/false.mp3");
+		//var audio_false= new Audio("/file:///H:/Keys/jyuku-in-out-mail/awaeisu/in-out-mail/public/audio/false.mp3");
+		
 		/*
 		if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
 			alert("Let's get this party started-10")

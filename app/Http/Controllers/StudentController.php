@@ -25,7 +25,7 @@ class StudentController extends Controller
 
     function update_JQ(Request $request)
     {
-        Log::alert('gender='.$request->gender);
+        //Log::alert('gender='.$request->gender);
         $email_array=explode(",", $request->email);
         $protector_array=explode(",", $request->protector);
         /*

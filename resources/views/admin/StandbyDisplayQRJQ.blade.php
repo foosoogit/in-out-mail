@@ -127,6 +127,7 @@
 	<script>
 		const hidden_interval=3000;
 		audio_path=document.getElementById("audio_path_hdn").value;
+		console.log(audio_path);
 		var audio_out= new Audio(audio_path+"time_out.mp3");
 		var audio_in= new Audio(audio_path+"true.mp3");
 		var audio_false= new Audio(audio_path+"false.mp3");

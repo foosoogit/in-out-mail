@@ -29,6 +29,7 @@ class ListStudents extends Component
         }else{
             session(['registered_flg' => "checked"]);
         }
+        Log::alert("registered_flg=".session('registered_flg'));
     }
     
     public function unregistered(){
@@ -37,6 +38,7 @@ class ListStudents extends Component
         }else{
             session(['unregistered_flg' => "checked"]);
         }
+        Log::alert("unregistered_flg=".session('unregistered_flg'));
     }
 
     public function withdrawn(){

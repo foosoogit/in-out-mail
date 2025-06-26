@@ -222,12 +222,24 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('students', [\App\Http\Controllers\StudentController::class,'store'])->name('student');
     Route::post('students/store', [\App\Http\Controllers\StudentController::class,'store'])->name('student.store');
 
-    Route::get('students/list', [TeachersController::class, 'show_students_list'])->name('Students.List.get');
+    //Route::get('students/list', [TeachersController::class, 'show_students_list'])->name('Students.List.get');
+
+    Route::get('students/list', function () {
+        if(session('registered_flg')===null){
+            session(['registered_flg' => "checked"]);
+        }
+        if(session('unregistered_flg'===null)){
+            session(['unregistered_flg' => "checked"]);
+        }
+        if(session('withdrawn_flg')===null){
+            session(['withdrawn_flg' => "checked"]);
+        }
+        return view('admin.ListStudents');
+    })->name('Students.List.get');
+
     Route::get('livewire/message/list-students', [TeachersController::class, 'show_students_list']);
 
     Route::get('livewire/update', [TeachersController::class, 'show_students_list']);
-
-    
 
     //Route::post('students/list', [TeachersController::class, 'test'])->name('Students.List.post');
 

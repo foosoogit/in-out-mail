@@ -1,10 +1,23 @@
   /* CheckBoxを大きくする */
+
 input[type="checkbox"]{
-    transform: scale(2);
+    transform: scale(2.3);
+    vertical-align:middle;
+    margin-bottom: 0.3em;
 }
+
+/*
 input[type="radio"]{
     transform: scale(2);
+
+    display: flex;
+    vertical-align:center;
 }
+.radio{
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+  }
 input[type="text"]{
     font-size: x-large;
 }
@@ -15,7 +28,12 @@ div.form-check{
     padding-top: 20px;
     padding-bottom: 20px;
 }
+
+input {
+    vertical-align: middle;
+}
 .vertical-align input,
 .vertical-align select{
 	vertical-align:middle;
 }
+*/

@@ -214,6 +214,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('students/ShowInputStudent', [\App\Http\Controllers\StudentController::class,'ShowInputStudent'])->name('ShowInputStudent.Modify');
     Route::get('students/ShowInputStudent', [\App\Http\Controllers\StudentController::class,'ShowInputStudent'])->name('ShowInputStudent.Modify');
     
+    Route::get('students/create_2', [\App\Http\Controllers\StudentController::class,'ShowCreatetudent'])->name('Students.Create_2');
     Route::get('students/create', [\App\Http\Controllers\StudentController::class,'ShowInputNewStudent'])->name('Students.Create');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

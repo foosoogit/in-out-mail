@@ -13,7 +13,22 @@ use Illuminate\Support\MessageBag;
 
 class OtherFunc extends Controller
 {
-    public static function validateMail($tagetEmail){
+	public static function make_html_gender_ckbox($target){
+		$htm_gender_ckbox='';$gender_array=array();
+		$gender_array[0]='男';$gender_array[1]='女';
+		$i=0;
+		foreach($gender_array as $gender){
+			$cked='';
+			if($target==$gender){$cked='checked="checked"';}
+			$htm_gender_ckbox.='<div class="form-check-inline"><div class="col-auto">';
+			$htm_gender_ckbox.='<input class="form-check-input" type="checkbox" name="gender[]" id="gender['.$i.']" value="'.$gender.'" '.$cked.' onchange="gender_manage(this);"></div>';
+			$htm_gender_ckbox.='<label class="form-check-label" for="gender['.$i.']">'.$gender.'</label></div>';
+			$i++;
+		}
+		return $htm_gender_ckbox;
+	}
+	
+	public static function validateMail($tagetEmail){
 		$target_array = array('mail'=>$tagetEmail);
 		$validator = Validator::make($target_array,
 			['mail' => 'email']
@@ -79,20 +94,6 @@ class OtherFunc extends Controller
 			$htm_course_ckbox.='<label class="block font-medium text-sm text-gray-700"><input class="form-check-input" type="checkbox" name="course[]" value="'.$cource.'" '.$cked.'>&nbsp;'.$cource.'<label>';
 		}
 		return $htm_course_ckbox;
-	}
-
-	public static function make_html_gender_ckbox($target){
-		$htm_gender_ckbox='';$gender_array=array();
-		$gender_array[0]='男';$gender_array[1]='女';
-		$i=0;
-		foreach($gender_array as $gender){
-			$cked='';
-			if($target==$gender){$cked='checked="checked"';}
-			$htm_gender_ckbox.='<div class="form-check"><div class="col-auto vertical-align">';
-			$htm_gender_ckbox.='<input class="form-check-input vertical-align" type="checkbox" name="gender[]" id="gender['.$i.']" value="'.$gender.'" '.$cked.' onchange="gender_manage(this);"></div><div class="col-auto vertical-align"><label class="form-check-label vertical-align" for="gender['.$i.']">'.$gender.'</label></div></div>';
-			$i++;
-		}
-		return $htm_gender_ckbox;
 	}
 
 	public static function set_access_history($REFERER){

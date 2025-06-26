@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('/css/default.css')  }}" >
+    <link rel="stylesheet" href="{{ asset('/css/default.css?date=20241201')  }}" >
     <!-- Scripts -->
     <!--@vite(['resources/css/app.css', 'resources/js/app.js'])-->
 </head>
@@ -36,7 +36,7 @@
                                 <label for="serial_student" class="max-w-7xl font-large">生徒番号 </label>
                             </div>
                             <div class="col-auto">
-                                <input id="serial_student" name="serial_student" type="text" class="form-control" value="{{$stud_inf->serial_student}}" readonly/>
+                                <input id="serial_student" name="serial_student" type="text" class="form-control" value="{{$stud_inf->serial_student ?? $student_serial }}" readonly/>
                             </div>
                             <div class="col-auto">
                                 <x-input-error class="mt-2" :messages="$errors->get('serial_student')" /> {!! $barcode !!}
@@ -72,34 +72,13 @@
                             {{--</div>--}}
                              
                         </div>
+                        {{--
                         <div class="row">
                             <div class="col-auto"> 
                                 {!!$html_course_ckbox!!} 
                             </div>
                         </div>
-                        {{-- 
-                        <div class="row">
-                        <div class="form-check">
-                            <div class="col-auto">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            
-                                <label class="form-check-label" for="flexCheckDefault">
-                              Default checkbox
-                            </label>
-                            </div>
-                          </div>
-                          <div class="form-check">
-                            <div class="col-auto">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                            </div>
-                            <div class="col-auto">
-                            <label class="form-check-label" for="flexCheckChecked">
-                              Checked checkbox
-                            </label>
-                            </div>
-                          </div>
-                        </div>
-                         --}}
+                        --}}
                         <div class="row">
                             <div class="col-4">
                                 <x-input-label for="protector_array[0]" value="送信先宛名-1" class="control-label"/>
@@ -183,7 +162,7 @@
                             @if( session('flash.modify') )
                                 <div class="alert alert-modify">{{ session('flash.modify') }}</div>
                             @endif
-                            <button type="button" class="btn btn-primary" onclick="save_manage('save');">登録する</button>
+                            <button type="button" class="btn btn-primary" onclick="save_manage('{{$mnge}}');">登録する</button>
                         </div>
                     </div>
                 </div>
@@ -201,7 +180,7 @@
                 }
             }
             function save_manage(type){
-                console.log("type="+type);
+                //console.log("type="+type);
 
                 if(type=='mail'){
                     if(!window.confirm("送信しますか？")){

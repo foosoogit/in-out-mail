@@ -31,12 +31,12 @@
               <tbody>
                 <tr>
                   <th scope="row" class="display-1">1</th>
-                  <td ><a href="{{ route('teachers.show_standby_display') }}">待ち受け画面</a></td>
+                  <td ><a href="{{ route('teachers.show_standby_display') }}">待ち受け画面(コードリーダー用)</a></td>
                   <td>コードリーダーで読み込みます。</td>
                 </tr>
                 <tr>
                   <th scope="row" class="display-1">2</th>
-                  <td ><a href="{{ route('teachers.show_standby_display_QR') }}">待ち受け画面(QR)</a></td>
+                  <td ><a href="{{ route('teachers.show_standby_display_QR') }}">待ち受け画面(スマホ用)</a></td>
                   <td>スマホで直接QRコードを読み込みます。</td>
                 </tr>
                 <tr>
@@ -53,6 +53,11 @@
                   <th scope="row">5</th>
                   <td><a href="{{ route('Students.List.get') }}">生徒一覧（修正・退会）</a></td>
                   <td>生徒一覧、修正、退会処理できます。</td>
+                </tr>
+                <tr>
+                  <th scope="row">6</th>
+                  <td><a href="{{ route('Students.Create_2') }}">新規生徒登録</a></td>
+                  <td>新規生徒登録 New</td>
                 </tr>
                 <tr>
                   <th scope="row">6</th>

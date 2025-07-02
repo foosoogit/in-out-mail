@@ -121,7 +121,7 @@ class ListStudents extends Component
             $StudentQuery=$StudentQuery->where('status','<>','卒業');
         }
         if(session('unregistered_flg')<>"checked"){
-            $StudentQuery=$StudentQuery->whereNotNull('status');
+            $StudentQuery=$StudentQuery->where('status','<>','');
         }
         /*else{
             $StudentQuery=$StudentQuery->orwhereNull('status');

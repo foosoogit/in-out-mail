@@ -67,6 +67,14 @@
                             </div>
                         </div>
                         <div class="row">
+                            在籍状態：&nbsp;
+                            {{-- <div class="col-auto"> --}}
+                                {!!$html_status_rbtn!!}  
+                            {{--</div>--}}
+                             
+                        </div>
+                        <div class="row">
+                            性別：&nbsp;
                             {{-- <div class="col-auto"> --}}
                                 {!!$html_gender_ckbox!!}  
                             {{--</div>--}}
@@ -170,7 +178,7 @@
         </div>
         <script type="text/javascript">
             function gender_manage(obj){
-                console.log("id="+obj.id);
+                //console.log("id="+obj.id);
                 if(obj.checked==true){
                     if(document.getElementById('gender[1]').id==obj.id){
                         document.getElementById('gender[0]').checked=false;
@@ -180,8 +188,6 @@
                 }
             }
             function save_manage(type){
-                //console.log("type="+type);
-
                 if(type=='mail'){
                     if(!window.confirm("送信しますか？")){
                         return false;
@@ -204,7 +210,6 @@
                     }
                 }
                     var gender="";
-                    //var gender_array=document.getElementsByName("gender");
                     for(i=0;i<2;i++){
                         if(document.getElementById("gender["+i+"]").checked){
                             gender=document.getElementById("gender["+i+"]").value;
@@ -227,6 +232,7 @@
                             "name_mei_kana":$('#name_mei_kana').val(),
                             "protector":protectors,
                             "pass_for_protector":$('#pass_for_protector').val(),
+                            "status":$('input[name="status"]:checked').val(),
                             "gender":gender,
                             "phone":$('#phone').val(),
                             "grade":$('#grade').val(),

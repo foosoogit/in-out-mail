@@ -7,6 +7,12 @@ use App\Models\Configration;
 
 class InitConsts extends Controller
 {
+    public static function StatusArray(){
+        $Tcource=Configration::where('subject','=','Status')->first();
+        $Status_array=explode(",", $Tcource->value1);
+        return $Status_array;
+    }
+
     public static function CourceArray(){
         $Tcource=Configration::where('subject','=','Course')->first();
         $course_array=explode(",", $Tcource->value1);

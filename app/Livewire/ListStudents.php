@@ -29,7 +29,6 @@ class ListStudents extends Component
         }else{
             session(['registered_flg' => "checked"]);
         }
-        Log::alert("registered_flg=".session('registered_flg'));
     }
     
     public function unregistered(){
@@ -38,7 +37,6 @@ class ListStudents extends Component
         }else{
             session(['unregistered_flg' => "checked"]);
         }
-        Log::alert("unregistered_flg=".session('unregistered_flg'));
     }
 
     public function withdrawn(){
@@ -46,6 +44,14 @@ class ListStudents extends Component
             session(['withdrawn_flg' => ""]);
         }else{
             session(['withdrawn_flg' => "checked"]);
+        }
+    }
+
+    public function graduation(){
+        if(session('graduation_flg')=="checked"){
+            session(['graduation_flg' => ""]);
+        }else{
+            session(['graduation_flg' => "checked"]);
         }
     }
 
@@ -57,12 +63,9 @@ class ListStudents extends Component
         $this->targetPage=null;
         $this->Unregistered_flg=false;
         $this->Retiree_flg=false;
-
         $this->serch_key_p="";
 		$this->kensakukey="";
-
 		session(['serchKey' => '']);
-        //session(['sort_key2' => 'serial_student']);
     }
 
     public function search_from_top_menu(Request $request){
@@ -73,7 +76,6 @@ class ListStudents extends Component
 
     public function search(){
         $this->targetPage=1;
-
         $this->serch_key_p=$this->kensakukey;
 		session(['serchKey' => $this->kensakukey]);
 	}
@@ -83,14 +85,12 @@ class ListStudents extends Component
 		$sort_key_array=explode("-", $sort_key);
 		session(['sort_key' =>$sort_key_array[0]]);
 		session(['asc_desc' =>$sort_key_array[1]]);
-
 	}
 
     public function render(){
         if(isset($_SERVER['HTTP_REFERER'])){
             OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
         }
-
 
         if(!isset($sort_key_p) and session('sort_key')==null){
             session(['sort_key' =>'']);
@@ -102,9 +102,32 @@ class ListStudents extends Component
         }
         $this->asc_desc_p=session('asc_desc');
 
-
         $StudentQuery = Student::query();
 
+        $status_array=array();
+        
+        log::alert('registered_flg 2='.session('registered_flg'));
+        log::alert('withdrawn_flg 2='.session('withdrawn_flg'));
+        log::alert('graduation_flg 2='.session('graduation_flg'));
+        log::alert('unregistered_flg 2='.session('unregistered_flg'));
+
+        if(session('registered_flg')<>"checked"){
+            $StudentQuery=$StudentQuery->where('status','<>','在籍');
+        }
+        if(session('withdrawn_flg')<>"checked"){
+            $StudentQuery=$StudentQuery->where('status','<>','退会');
+        }
+        if(session('graduation_flg')<>"checked"){
+            $StudentQuery=$StudentQuery->where('status','<>','卒業');
+        }
+        if(session('unregistered_flg')<>"checked"){
+            $StudentQuery=$StudentQuery->whereNotNull('status');
+        }
+        /*else{
+            $StudentQuery=$StudentQuery->orwhereNull('status');
+        }*/
+        
+        /*
         if(session('registered_flg')=="checked" && session('unregistered_flg')=="" && session('withdrawn_flg')==""){
             $users = $StudentQuery->where('name_sei','<>',null)
                     ->where('name_sei','<>',"")
@@ -131,9 +154,22 @@ class ListStudents extends Component
             $StudentQuery =$StudentQuery->whereNull('name_sei')
                 ->orwhere('name_sei','=',"");
         }
-
+        */
         if($this->kensakukey<>""){
             self::$key="%".$this->kensakukey."%";
+            $StudentQuery =$StudentQuery->where(function($query) {
+            $query->where('serial_student','like',self::$key)
+                ->orwhere('name_sei','like',self::$key)
+                ->orwhere('name_mei','like',self::$key)
+                ->orwhere('name_sei_kana','like',self::$key)
+                ->orwhere('name_mei_kana','like',self::$key)
+                ->orwhere('grade','like',self::$key)
+                ->orwhere('phone','like',self::$key)
+                ->orwhere('course','like',self::$key)
+                ->orwhere('email','like',self::$key);
+            });
+        }
+        /*
             $StudentQuery =$StudentQuery->where('serial_student','like',self::$key)
                 ->orwhere('name_sei','like',self::$key)
                 ->orwhere('name_mei','like',self::$key)
@@ -143,6 +179,7 @@ class ListStudents extends Component
                 ->orwhere('phone','like',self::$key)
                 ->orwhere('course','like',self::$key);
         }
+                */
         $targetSortKey="";
         if(session('sort_key')<>""){
             $targetSortKey=session('sort_key');

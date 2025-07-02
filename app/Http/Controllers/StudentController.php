@@ -23,6 +23,13 @@ class StudentController extends Controller
         return view('guest.show_login_guest');
     }
 
+    public function ajax_change_status(Request $request){
+        //log::alert("status=".$request->status);
+        //log::alert("student_serial=".$request->student_serial);
+        $res=Student::where('serial_student',$request->student_serial)->update(['status' => $request->status]);
+        echo $res;
+    }
+
     public function ShowCreatetudent(Request $request){
         //$stud_inf=Student::where('serial_student','=',$request->StudentSerial_Btn)->first();
         $serial_max=Student::max('serial_student');
@@ -36,6 +43,7 @@ class StudentController extends Controller
         $html_grade_slct=OtherFunc::make_html_grade_slct("");
         $html_course_ckbox=OtherFunc::make_html_course_ckbox("");
         $html_gender_ckbox=OtherFunc::make_html_gender_ckbox("");
+        $html_status_rbox=OtherFunc::make_html_status_rbox("");
         $generator = new BarcodeGeneratorHTML();
         $barcode =$generator->getBarcode($student_serial, $generator::TYPE_CODE_128);
         $email_array=array();
@@ -44,7 +52,7 @@ class StudentController extends Controller
             $email_array[$i]="";
         }
         $mnge='new';
-        return view('admin.CreateStudent',compact("barcode","html_gender_ckbox","protector_array","email_array","html_course_ckbox","stud_inf","html_grade_slct","student_serial","mnge"));
+        return view('admin.CreateStudent',compact("html_status_rbox","barcode","html_gender_ckbox","protector_array","email_array","html_course_ckbox","stud_inf","html_grade_slct","student_serial","mnge"));
     }
 
     public function ShowInputStudent(Request $request){
@@ -53,6 +61,7 @@ class StudentController extends Controller
         $html_grade_slct=OtherFunc::make_html_grade_slct($stud_inf->grade);
         $html_course_ckbox=OtherFunc::make_html_course_ckbox($stud_inf->course);
         $html_gender_ckbox=OtherFunc::make_html_gender_ckbox($stud_inf->gender);
+        $html_status_rbtn=OtherFunc::make_html_status_rbox($stud_inf->status);
         $student_serial=$stud_inf->serial_student;
         $generator = new BarcodeGeneratorHTML();
         $barcode =$generator->getBarcode($student_serial, $generator::TYPE_CODE_128);
@@ -69,12 +78,13 @@ class StudentController extends Controller
             }
         }
         $mnge='modify';
-        return view('admin.CreateStudent',compact("barcode","html_gender_ckbox","protector_array","email_array","html_course_ckbox","stud_inf","html_grade_slct","student_serial","mnge"));
+        return view('admin.CreateStudent',compact("html_status_rbtn","barcode","html_gender_ckbox","protector_array","email_array","html_course_ckbox","stud_inf","html_grade_slct","student_serial","mnge"));
 	}
     
     function update_JQ(Request $request){
         $email_array=explode(",", $request->email);
         $protector_array=explode(",", $request->protector);
+
         Student::upsert(
             [
                 [
@@ -86,6 +96,7 @@ class StudentController extends Controller
                 'name_mei_kana'=>$request->name_mei_kana,
                 'protector'=>$request->protector,
                 'pass_for_protector'=>$request->pass_for_protector,
+                'status'=>$request->status,
                 'gender'=>$request->gender,
                 'phone'=>$request->phone,
                 'grade'=>$request->grade,
@@ -98,6 +109,7 @@ class StudentController extends Controller
             ],
             ['serial_student']
           );
+
           /*
         Student::where('serial_student', '=', $request->serial_student)
             ->update([
@@ -181,26 +193,7 @@ class StudentController extends Controller
             ->select("serial_student")
             ->where("id", "=", $StudentID);
         })->delete();
-
-       //dd($InOutquery->toSql(), $InOutquery->getBindings());
        Student::find($StudentID)->delete();
-       /*
-       $student = Student::find($StudentID);
-        $student->update([
-            //'serial_student'=>$request->serial_student,
-            'email'=>"",
-            'name_sei'=>"",
-            'name_mei'=>"",
-            'name_sei_kana'=>"",
-            'name_mei_kana'=>"",
-            'protector'=>"",
-            'gender'=>"",
-            'phone'=>"",
-            'grade'=>"",
-            'note'=>"",
-            'course'=>"",
-        ]);
-        */
         return back();
     }
 
@@ -215,7 +208,7 @@ class StudentController extends Controller
         $course = implode( ",", $request->course );
         $protector = implode( ",", $request->protector_array );
         $email = implode( ",", $request->email_array );
-
+        //Log::info($request);
         Student::create([
             'serial_student'=>$request->serial_student,
             'email'=>$email,
@@ -223,6 +216,7 @@ class StudentController extends Controller
             'name_mei'=>$request->name_mei,
             'name_sei_kana'=>$request->name_sei_kana,
             'name_mei_kana'=>$request->name_mei_kana,
+            'status'=>$request->status,
             'gender'=>$request->gender,
             'protector'=>$protector,
             'pass_for_protector'=>$request->pass_for_protector,
@@ -244,6 +238,8 @@ class StudentController extends Controller
     {
         session(['registered_flg' => ""]);
         session(['unregistered_flg' => "checked"]);
+        session(['withdrawn_flg' => ""]);
+        session(['graduation_flg' => ""]);
         return view('admin.ListStudents');
         /*
         $targetgrade="";

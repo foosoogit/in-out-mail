@@ -18,6 +18,31 @@ class MailDelivery extends Component
 	public $kensakukey="";
     public static $key="";
 
+    public function registered(){
+        if(session('registered_flg')=="checked"){
+            session(['registered_flg' => ""]);
+        }else{
+            session(['registered_flg' => "checked"]);
+        }
+        //Log::alert("registered_flg=".session('registered_flg'));
+    }
+
+    public function withdrawn(){
+        if(session('withdrawn_flg')=="checked"){
+            session(['withdrawn_flg' => ""]);
+        }else{
+            session(['withdrawn_flg' => "checked"]);
+        }
+    }
+
+    public function graduation(){
+        if(session('graduation_flg')=="checked"){
+            session(['graduation_flg' => ""]);
+        }else{
+            session(['graduation_flg' => "checked"]);
+        }
+    }
+
     public function searchClear(){
 		$this->serch_key_p="";
 		$this->kensakukey="";
@@ -59,9 +84,23 @@ class MailDelivery extends Component
         $this->asc_desc_p=session('asc_desc');
     
         $StudentQuery = Student::query();
+        $StudentQuery=$StudentQuery->where('status','<>','');
+        if(session('registered_flg')<>"checked"){
+            $StudentQuery=$StudentQuery->where('status','<>','在籍');
+        }
+        if(session('withdrawn_flg')<>"checked"){
+            $StudentQuery=$StudentQuery->where('status','<>','退会');
+        }
+        if(session('graduation_flg')<>"checked"){
+            $StudentQuery=$StudentQuery->where('status','<>','卒業');
+        }
+
+        //Log::alert("registered_flg=".session('registered_flg'));
+        //Log::alert("withdrawn_flg=".session('withdrawn_flg'));
+        //Log::alert("graduation_flg=".session('graduation_flg'));
         //$StudentQuery =$StudentQuery->where('name_sei','<>','');
-        $StudentQuery = $StudentQuery->whereNotNull('name_sei');
-        $StudentQuery =$StudentQuery->where('name_sei','<>','');
+        //$StudentQuery = $StudentQuery->whereNotNull('name_sei');
+        //$StudentQuery =$StudentQuery->where('name_sei','<>','');
         $from_place="";$target_day="";$backdayly=false;
     
         if(isset($_POST['btn_serial'])){
@@ -70,7 +109,31 @@ class MailDelivery extends Component
         }else if(session('serchKey')==""){
             session(['serchKey' => $this->serch_key_p]);
         }
+/*
+        $StudentQuery=$StudentQuery->where(function($query) {
+                   $query->where('phone', '00')
+                         ->orWhere('add', 'chiba');
+               })
+
+               ->where('name', 'mike')
+               ->where(function($query) {
+                   $query->where('phone', '00')
+                         ->orWhere('add', 'chiba');
+               })
+                         */
         self::$key="%".session('serchKey')."%";
+        $StudentQuery =$StudentQuery->where(function($query) {
+            $query->where('serial_student','like',self::$key)
+                ->orwhere('name_sei','like',self::$key)
+                ->orwhere('name_mei','like',self::$key)
+                ->orwhere('name_sei_kana','like',self::$key)
+                ->orwhere('name_mei_kana','like',self::$key)
+                ->orwhere('grade','like',self::$key)
+                ->orwhere('phone','like',self::$key)
+                ->orwhere('course','like',self::$key)
+                ->orwhere('email','like',self::$key);
+        });
+        /*
         $StudentQuery =$StudentQuery->where('serial_student','like',self::$key)
                     ->orwhere('name_sei','like',self::$key)
                     ->orwhere('name_mei','like',self::$key)
@@ -80,7 +143,7 @@ class MailDelivery extends Component
                     ->orwhere('phone','like',self::$key)
                     ->orwhere('course','like',self::$key)
                     ->orwhere('email','like',self::$key);
-    
+        */
         $targetSortKey="";
         if(session('sort_key')<>""){
             $targetSortKey=session('sort_key');
@@ -127,7 +190,9 @@ class MailDelivery extends Component
             $targetPage=null;
         }
         if(self::$key=="%%"){$targetPage=null;}
+        //dd($StudentQuery->toSql(), $StudentQuery->getBindings());
         $students=$StudentQuery->paginate(200);
+        //$this->students=$StudentQuery->paginate($perPage = initConsts::DdisplayLineNumStudentsList(),['*'], 'page',$this->targetPage);
         return view('livewire.mail-delivery',compact("students"));
     }
 }

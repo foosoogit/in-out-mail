@@ -19,6 +19,41 @@ class StudentsList extends Component
     public $sort_key_p = '',$asc_desc_p="",$serch_key_p="";
 	public $kensakukey="";
     public static $key="";
+
+    public function registered(){
+        if(session('registered_flg')=="checked"){
+            session(['registered_flg' => ""]);
+        }else{
+            session(['registered_flg' => "checked"]);
+        }
+        //Log::alert("registered_flg=".session('registered_flg'));
+    }
+    
+    public function unregistered(){
+        if(session('unregistered_flg')=="checked"){
+            session(['unregistered_flg' => ""]);
+        }else{
+            session(['unregistered_flg' => "checked"]);
+        }
+        //Log::alert("unregistered_flg=".session('unregistered_flg'));
+    }
+
+    public function withdrawn(){
+        if(session('withdrawn_flg')=="checked"){
+            session(['withdrawn_flg' => ""]);
+        }else{
+            session(['withdrawn_flg' => "checked"]);
+        }
+    }
+
+    public function graduation(){
+        if(session('graduation_flg')=="checked"){
+            session(['graduation_flg' => ""]);
+        }else{
+            session(['graduation_flg' => "checked"]);
+        }
+    }
+    
     /*
     public function searchClear(){
 		$this->serch_key_p="";
@@ -43,7 +78,7 @@ class StudentsList extends Component
 		$sort_key_array=explode("-", $sort_key);
 		session(['sort_key' =>$sort_key_array[0]]);
 		session(['asc_desc' =>$sort_key_array[1]]);
-        Log::alert('sort_key='.session('sort_key'));
+        //Log::alert('sort_key='.session('sort_key'));
 	}
     public function render()
     {
@@ -51,6 +86,18 @@ class StudentsList extends Component
         if(session('asc_desc')==""){session(['asc_desc' =>"asc"]);}
         if(session('sort_key')<>""){
             $StudentQuery =$StudentQuery->orderBy(session('sort_key'),session('asc_desc'));
+        }
+        if(session('registered_flg')<>"checked"){
+            $StudentQuery=$StudentQuery->where('status','<>','在籍');
+        }
+        if(session('withdrawn_flg')<>"checked"){
+            $StudentQuery=$StudentQuery->where('status','<>','退会');
+        }
+        if(session('graduation_flg')<>"checked"){
+            $StudentQuery=$StudentQuery->where('status','<>','卒業');
+        }
+        if(session('unregistered_flg')<>"checked"){
+            $StudentQuery=$StudentQuery->whereNotNull('status');
         }
         /*
         if(isset($_SERVER['HTTP_REFERER'])){

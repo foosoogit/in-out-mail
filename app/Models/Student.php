@@ -29,5 +29,12 @@ class Student extends Model
         'high_school',
         'pass_for_protector',
         'note',
+        'status',
     ];
+    /*
+    public function getMakeStatusRadioBtnInAttribute($value){
+		$TI=date('H:i:s', strtotime($this->time_in));
+		return $TI;
+	}
+    */
 }

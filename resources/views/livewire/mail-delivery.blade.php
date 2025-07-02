@@ -1,8 +1,22 @@
 <div>
     <div class="py-12"> 
        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 h6">
-           <div class="pb-4 row justify-content-center align-middle h6">
-               <div class="col-auto">
+            <div class="row justify-content-start m-4">
+                <div class="col-auto">
+			        <input class="form-check-input" style="transform:scale(1.5);" type="checkbox" name="status" id="registered" value="在籍" wire:click="registered()" {{ session('registered_flg') }}>
+			        <label class="form-check-label" for="registered">在籍</label>
+                </div>
+                <div class="col-auto">
+			        <input class="form-check-input" style="transform:scale(1.5);" type="checkbox" name="status" id="graduation" value="卒業" wire:click="graduation()"  {{ session('graduation_flg') }}>
+			        <label class="form-check-label" for="graduation">卒業</label>
+                </div>
+                <div class="col-auto">
+			        <input class="form-check-input" style="transform:scale(1.5);" type="checkbox" name="status" id="withdrawn" value="退会" wire:click="withdrawn()"  {{ session('withdrawn_flg') }}>
+			        <label class="form-check-label" for="withdrawn">退会</label>
+                </div>
+            </div>
+            <div class="pb-0 row justify-content-start align-middle h6">
+                <div class="col-auto">
                    <x-text-input id="kensakukey_txt" name="kensakukey_txt" type="text" class="mt-1 block w-full" :value="old('kensakukey','optional(target_key)')" required autofocus wire:model.defer="kensakukey"/>
                </div>
                    {{--  <a wire:click="search()" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">検索</a>--}}
@@ -35,6 +49,10 @@
                                         コース<br class="d-none d-sm-block"><button type="button" class="btn-orderby-border" wire:click="sort('course-ASC')"><img src="{{ asset('images/sort_A_Z.png') }}"  width="15px" /></button>
                                         <button type="button" class="btn-orderby-border" wire:click="sort('course-Desc')"><img src="{{ asset('images/sort_Z_A.png') }}"  width="15px"/></button>
                                     </th>
+                                    <th class="th-min" scope="col" style="width: 20%">
+                                        在籍状態<br class="d-none d-sm-block"><button type="button" class="btn-orderby-border" wire:click="sort('status-ASC')"><img src="{{ asset('images/sort_A_Z.png') }}"  width="15px" /></button>
+                                        <button type="button" class="btn-orderby-border" wire:click="sort('status-Desc')"><img src="{{ asset('images/sort_Z_A.png') }}"  width="15px"/></button>
+                                    </th>
                                 {{-- <th>メールアドレス<br><button type="button" class="btn-orderby-border" wire:click="sort('email-ASC')"><img src="{{ asset('images/sort_A_Z.png') }}" width="15px" /></button>
                                         <button type="button" class="btn-orderby-border" wire:click="sort('email-Desc')"><img src="{{ asset('images/sort_Z_A.png') }}" width="15px" /></button></th>
                                     --}}
@@ -48,7 +66,7 @@
                                             <label class="form-check-label" for="target_student_cb_{{ $student->serial_student}}">{{ $student->name_sei }} {{ $student->name_mei }}</label></div></td>
                                         <td scope="col" style="width: 20%">{{ $student->grade }}</td>
                                         <td scope="col" style="width: 20%">{{ $student->course }}</td>
-                                        {{--<td class="font-small">{{ $student->email }}</td>--}}
+                                        <td class="font-small">{{ $student->status }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -61,7 +79,6 @@
     </div>
     <script>
        function cboxAll(obj) {
-           //console.log(obj);
            let el = document.getElementsByName("target_student_cb");
            for(i=0;i<el.length;i++){
                console.log(el[i].checked);

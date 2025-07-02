@@ -43,7 +43,8 @@ class TeachersController extends Controller
         $target_stud_email_array=array();
         $send_stud_serial_array=array();
         foreach($student_serial_array as $student_serial){
-            $target_stud_inf_array=Student::where("serial_student","=",$student_serial)->first();
+            $target_stud_inf_array=Student::where("serial_student","=",$student_serial)
+                ->where('status', '在籍')->first();
             $to_email_array=explode(",",$target_stud_inf_array->email);
             $protector_array=explode(",",$target_stud_inf_array->protector);
             $target_stud_name_array[]=$target_stud_inf_array->name_sei.$target_stud_inf_array->name_mei;
@@ -182,6 +183,11 @@ class TeachersController extends Controller
     }
 
     public function show_delivery_email(){
+        if(null === session('registered_flg')){
+            session(['registered_flg' => "checked"]);
+            session(['withdrawn_flg' => ""]);
+            session(['graduation_flg' => ""]);
+        }
         $show_list_students_html = [];
         $show_list_students_html[] = '<iframe src="show_delivery_email_list_students" style="display:block;width:100%;height:100%;" class="h6" id="StudList_if" ></iframe>';
         $show_list_students_html= implode("", $show_list_students_html);
@@ -192,14 +198,10 @@ class TeachersController extends Controller
 
     public function send_test_mail($type)
     {
-        //$user = Auth::user();
         $from_mail_add=config('mail.from.address');
         
         $target_item_array['to_email']=$from_mail_add;
         $target_item_array['from_email']=$from_mail_add;
-
-        //$target_item_array['to_email']=$user->email;
-        //$target_item_array['from_email']=$user->email;
         if($type=="MsgIn"){
             //$msg=Storage::get('MsgIn.txt');
             $msg=InitConsts::MsgIn();
@@ -217,27 +219,13 @@ class TeachersController extends Controller
         $msg=str_replace('[name-student]', $name_student, $msg);
 
         $msg=OtherFunc::ConvertPlaceholder($msg,"body");
-        //$msg=htmlentities($msg);
-        /*
-        $msg=str_replace('[time]', date("Y-m-d H:i:s"), $msg);
-        $msg=str_replace('[name-jyuku]', InitConsts::JyukuName(), $msg);
-        $msg=str_replace('[footer]', InitConsts::MsgFooter(), $msg);
-        */
         $target_item_array['msg']=$msg;
         $sbj=str_replace('[name-protector]',  $name_protector, $sbj);
         $sbj=str_replace('[name-student]', $name_student, $sbj);
 
         $sbj=OtherFunc::ConvertPlaceholder($sbj,"sbj");
-        /*
-        $sbj=str_replace('[time]', date("Y-m-d H:i:s"), $sbj);
-        $sbj=str_replace('[footer]', InitConsts::MsgFooter(), $sbj);
-        $sbj=str_replace('[name-jyuku]', InitConsts::JyukuName(), $sbj);
-        */
-        //Mail::send(['text' => 'mail.emailconfirm']
         $target_item_array['subject']=$sbj;
         Mail::send(new ContactMail($target_item_array));
-        //Mail::send(new SendTestMail($target_item_array));
-        //Mail::raw($body, static fn (Message $message) => $message->to($user->email)->subject($subject));
     }
 
     public function update_setting(Request $request)
@@ -267,7 +255,6 @@ class TeachersController extends Controller
             $msg="送信しました。";
         }
         return view('admin.Setting',compact("configration_array"))->with('success',$msg);
-        //return redirect('teachers.show_setting')->with('success',$msg);
     }
 
     public function show_setting()
@@ -288,7 +275,6 @@ class TeachersController extends Controller
             $msg=InitConsts::MsgOut();
             $sbj=InitConsts::sbjOut();
         }
-        //log::info($item_array);
         $msg=str_replace('[name-student]', $item_array['name_sei']." ".$item_array['name_mei'], $msg);
         $msg=str_replace('[time]', $item_array['target_time'], $msg);
         $msg=OtherFunc::ConvertPlaceholder($msg,"body");
@@ -305,21 +291,8 @@ class TeachersController extends Controller
             $target_item_array['msg']=str_replace('[name-protector]', $protector_array[$i], $msg);
             $target_item_array['to_email']=$target_email;
             Mail::send(new ContactMail($target_item_array));
-            /*
-            $cnt=count(Mail::failures());
-            if (count(Mail::failures()) > 0){
-                //$send_msd_flg="false";
-                $send_res['flg']="false";
-                //$send_msd="配信しました。";
-                $send_res_json = json_encode( $send_res , JSON_PRETTY_PRINT ) ;
-                echo $send_res_json;
-                return;
-            }
-            */
             $i++;
         }
-        //$send_msd="true";
-       
         $send_res['flg']="true";
         $send_res_json = json_encode( $send_res , JSON_PRETTY_PRINT ) ;
         echo $send_res_json;
@@ -331,12 +304,8 @@ class TeachersController extends Controller
         $student_serial_length=strlen($student_serial);
         $StudentInfSql=Student::where('serial_student','=',$student_serial);
         $StudentInf=$StudentInfSql->first();
-        //Log::info($StudentInf);
-        //Log::alert("empty=".empty($StudentInf));
         if(empty($StudentInf)){
             $target_item_array['seated_type']='NoSerial';
-            //$target_item_array['name_sei']=$StudentInf->name_sei;
-            //$target_item_array['name_mei']=$StudentInf->name_mei;
             $json = json_encode( $target_item_array , JSON_PRETTY_PRINT ) ;
             echo $json;
             return;   
@@ -507,12 +476,10 @@ class TeachersController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    //public function edit(User $user)
     public function edit(Request $request)
     {
         session(['fromPage' => 'InputStudent']);
 		$teacher_inf=User::where('serial_user','=',$request->TeacherSerial_Btn)->first();
-        //$html_grade_slct=OtherFunc::make_html_grade_slct($stud_inf->grade);
         $html_rank_ckbox=OtherFunc::make_html_course_ckbox($teacher_inf->rank);
         $teacher_serial=$teacher_inf->serial_user;
         $mnge='modify';
@@ -529,9 +496,7 @@ class TeachersController extends Controller
     public function update(Request $request, $id)
     {
         $rank = implode( ",", $request->course );
-        //print "id=".$id;
         $teacher = User::find($id);
-        //$teacher->update($request->all());
         $teacher->update([
             'email'=>$request->email,
             'name_sei'=>$request->name_sei,

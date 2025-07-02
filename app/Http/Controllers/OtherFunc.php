@@ -13,6 +13,20 @@ use Illuminate\Support\MessageBag;
 
 class OtherFunc extends Controller
 {
+	public static function make_html_status_rbox($target){
+		$target_status_array=array();$htm_status_rbox='';$i=0;
+		$target_status_array=InitConsts::StatusArray();
+		foreach($target_status_array as $status){
+			$cked='';
+			if(mb_strstr( $target,$status)!== false){$cked='checked="checked"';}
+			$htm_status_rbox.='<div class="form-check-inline"><div class="col-auto">';
+			$htm_status_rbox.='<input class="form-check-input" style="transform:scale(2.0);" type="radio" name="status" id="status['.$i.']" value="'.$status.'" '.$cked.' onchange="status_manage(this);"></div>';
+			$htm_status_rbox.='<label class="form-check-label" for="status['.$i.']">'.$status.'</label></div>';
+			$i++;
+		}
+		return $htm_status_rbox;
+	}
+
 	public static function make_html_gender_ckbox($target){
 		$htm_gender_ckbox='';$gender_array=array();
 		$gender_array[0]='男';$gender_array[1]='女';

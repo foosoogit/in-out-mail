@@ -39,6 +39,7 @@ return new class extends Migration
             $table->string('course',50)->nullable()->comment('受講コース');
             $table->string('subjects',50)->nullable()->comment('受講教科'); 
             $table->string('instructor',50)->nullable()->comment('担当講師');
+            $table->string('status',20)->default('')->comment('在籍状態 defaultは空文字');
             $table->text('note')->nullable()->comment('備考');
         });
     }

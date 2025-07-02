@@ -5,22 +5,21 @@
                 <div class="col-auto">
                     <button type="button" name="ToMenuBtn" id="ToMenuBtn" onclick="location.href='{{route('menu')}}'" class="btn btn-primary btn-sm">メニューに戻る</button>
                 </div>
-                {{-- 
-                <div class="col-auto">
-                    <button type="button" name="CreateBtn" id="CreateBtn" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700" onclick="location.href='{{route('Students.Create')}}'" >新規登録</button>
-                </div>
-                 --}}
-                 <div class="col-auto form-check form-check-inline">
+                <div class="col-auto form-check form-check-inline">
                     <input type="checkbox" name="registered_cbx" id="registered_cbx" wire:click="registered()" class="form-check-input" {{session('registered_flg')}}>
                     <label class="form-check-label" for="registered_cbx">&nbsp;在籍者</label>
                 </div>
                 <div class="col-auto form-check form-check-inline">
-                    <input type="checkbox" name="unregistered_cbx" id="unregistered_cbx" wire:click="unregistered()" class="form-check-input" {{session('unregistered_flg')}}>
-                    <label class="form-check-label" for="unregistered_cbx">&nbsp;未登録生徒番号</label>
+                    <input type="checkbox" name="graduation_cbx" id="graduation_cbx" wire:click="graduation()" class="form-check-input" {{session('graduation_flg')}}>
+                    <label class="form-check-label" for="graduation_cbx">&nbsp;卒業</label>
                 </div>
                 <div class="col-auto form-check form-check-inline">
                     <input type="checkbox" name="withdrawn_cbx" id="withdrawn_cbx" wire:click="withdrawn()" class="form-check-input" {{session('withdrawn_flg')}}>
-                    <label class="form-check-label" for="withdrawn_cbx">&nbsp;退会者</label>
+                    <label class="form-check-label" for="withdrawn_cbx">&nbsp;退会</label>
+                </div>
+                <div class="col-auto form-check form-check-inline">
+                    <input type="checkbox" name="unregistered_cbx" id="unregistered_cbx" wire:click="unregistered()" class="form-check-input" {{session('unregistered_flg')}}>
+                    <label class="form-check-label" for="unregistered_cbx">&nbsp;未登録生徒番号</label>
                 </div>
                 <div class="col-auto">
                     <x-text-input id="kensakukey_txt" name="kensakukey_txt" type="text" class="mt-1 block w-full" :value="old('kensakukey','optional(target_key)')" required autofocus wire:model.defer="kensakukey"/>
@@ -56,7 +55,7 @@
                     <th>電話</th>
                     <th>メモ</th>
                     <th>入退出履歴</th>
-                    <th>削除</th>
+                    <th>在籍状態</th>
                 </tr>
                 @foreach($students as $student)
                 <tr>
@@ -81,15 +80,57 @@
                         </form>
                     </td>
                     <td>
+                        {{--<form method="post" action="{{ route('student.ajax_change_status', $student->id) }}">@csrf--}}
+                            <div class="row">
+                                <div class="form-check col-sm">
+                                    @if ($student->status=='在籍')
+                                        <input class="form-check-input" type="radio" name="status_{{ $student->serial_student}}" id="enrollment_{{ $student->serial_student}}" value="在籍" onclick="change_status('{{ $student->serial_student}}',this);" checked>
+                                    @else
+                                        <input class="form-check-input" type="radio" name="status_{{ $student->serial_student}}" id="enrollment_{{ $student->serial_student}}" value="在籍" onclick="change_status('{{ $student->serial_student}}',this);">
+                                    @endif
+                                    <label class="form-check-label" for="enrollment_{{ $student->serial_student}}">在籍</label>
+                                </div>
+                                <div class="form-check col-sm">
+                                    @if ($student->status=='卒業')
+                                        <input class="form-check-input" type="radio" name="status_{{ $student->serial_student}}" id="graduation_{{ $student->serial_student}}" value="卒業" onclick="change_status('{{ $student->serial_student}}',this);" checked>
+                                    @else
+                                        <input class="form-check-input" type="radio" name="status_{{ $student->serial_student}}" id="graduation_{{ $student->serial_student}}" value="卒業" onclick="change_status('{{ $student->serial_student}}',this);">
+                                    @endif
+                                    <label class="form-check-label" for="graduation_{{ $student->serial_student}}">卒業</label>
+                                </div>
+                                <div class="form-check col-sm">
+                                    @if ($student->status=='退会')
+                                        <input class="form-check-input" type="radio" name="status_{{ $student->serial_student}}" id="withdrawal_{{ $student->serial_student}}" value="退会" onclick="change_status('{{ $student->serial_student}}',this);" checked>
+                                    @else
+                                        <input class="form-check-input" type="radio" name="status_{{ $student->serial_student}}" id="withdrawal_{{ $student->serial_student}}" value="退会" onclick="change_status('{{ $student->serial_student}}',this);">
+                                    @endif
+                                    <label class="form-check-label" for="withdrawal_{{ $student->serial_student}}">退会</label>
+                                </div>
+                            </div>
+                        {{--</form>--}}
+                    </td>
+                    {{-- 
+                    <td>
                         <form method="post" action="{{ route('student.delete', $student->id) }}">@csrf
                             @method('DELETE')
-                            @if($student->email=="")
+                            @if($student->status=="退会")
                                 <input type="submit" onClick="return clickDelete('{{ $student->name_sei }} {{ $student->name_mei }}')" class="delete-link underline text-sm text-gray-600 hover:text-gray-900 rounded-md" value="退会" disabled>    
                             @else
                                 <input type="submit" onClick="return clickDelete('{{ $student->name_sei }} {{ $student->name_mei }}')" class="delete-link underline text-sm text-gray-600 hover:text-gray-900 rounded-md" value="退会">
                             @endif
                         </form>
                     </td>
+                    <td>
+                        <form method="post" action="{{ route('student.delete', $student->id) }}">@csrf
+                            @method('DELETE')
+                            @if($student->status=="卒業")
+                                <input type="submit" onClick="return clickDelete('{{ $student->name_sei }} {{ $student->name_mei }}')" class="delete-link underline text-sm text-gray-600 hover:text-gray-900 rounded-md" value="卒業" disabled>    
+                            @else
+                                <input type="submit" onClick="return clickDelete('{{ $student->name_sei }} {{ $student->name_mei }}')" class="delete-link underline text-sm text-gray-600 hover:text-gray-900 rounded-md" value="卒業">
+                            @endif
+                        </form>
+                    </td>
+                     --}}
                 </tr>
                 @endforeach
             </table>

@@ -1,4 +1,5 @@
 <div>
+    使ってないBlade
     <div class="py-12"> 
        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 h6">
            <div class="pb-4 row justify-content-center align-middle h6">
@@ -69,7 +70,7 @@
                                         <td>{{ $student->phone }}</td>
                                         <td>{{ $student->email }}</td>
                                         <td>{{ $student->grade }}</td>
-                                        <td>{{ $student->course }}</td>
+                                        <td>{{ $student->course}}</td>
                                         <td>{{ $student->note }}</td>
                                         <td>
                                             <form action="{{route('admin.showRireki')}}" method="POST">@csrf

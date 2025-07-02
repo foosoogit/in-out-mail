@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>入退出メニュー awa</title>
+  <title>入退出メニュー</title>
 	{{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> --}}
 	{{--<link rel="stylesheet" href="css/style.css">--}}
 	{{-- <link rel="stylesheet" href="{{ asset('/css/menu_2.css')  }}" > --}}
@@ -54,11 +54,13 @@
                   <td><a href="{{ route('Students.List.get') }}">生徒一覧（修正・退会）</a></td>
                   <td>生徒一覧、修正、退会処理できます。</td>
                 </tr>
+                {{-- 
                 <tr>
                   <th scope="row">6</th>
                   <td><a href="{{ route('Students.Create_2') }}">新規生徒登録</a></td>
                   <td>新規生徒登録 New</td>
                 </tr>
+                --}}
                 <tr>
                   <th scope="row">6</th>
                   <td><a href="{{ route('Students.Create') }}">新規生徒登録</a></td>

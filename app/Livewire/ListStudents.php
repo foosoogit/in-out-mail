@@ -10,6 +10,22 @@ use Illuminate\Support\Collection;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Support\Facades\File;
+
+//QRコードライブラリに必要な読み込み
+/*
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Lavel\Alignment\LavelAlignmentCenter;
+use Endroid\QrCode\Lavel\Font\NotoSans;
+*/
 
 class ListStudents extends Component
 {
@@ -22,6 +38,133 @@ class ListStudents extends Component
     public $orderColumn = "serial_student";
     public $sortOrder = "asc";
     public $StudentQuery="";
+
+    public function csv_download(){
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle("在籍生徒一覧");
+        $sheet->setCellValue('A1', '生徒番号');
+        $sheet->getStyle( 'A1' )->getAlignment()->setHorizontal('center');  // 中央寄せ
+        $sheet->setCellValue('B1', '氏名');
+        $sheet->setCellValue('C1', 'QRコード');
+        $students_array=Student::where("status", "在籍")->get();
+        $cnt=2;
+        foreach($students_array as $student_inf){
+            $sheet->setCellValue('A'.$cnt, $student_inf->serial_student);
+            $sheet->getStyle( 'A'.$cnt )->getAlignment()->setHorizontal('center');  // 中央寄せ
+            $sheet->setCellValue('B'.$cnt, $student_inf->name_sei.' '.$student_inf->name_mei);
+            $sheet->setCellValue('c'.$cnt,'');
+           //if($cnt==2){
+                /*
+                $writer = new PngWriter();
+		        //Create QR code
+		        $qrCode = new QrCode(
+                    data: $target_sentence,
+                    encoding: new Encoding('UTF-8'),
+                    errorCorrectionLevel: ErrorCorrectionLevel::Low,
+                    size: 300,
+                    margin: 10,
+                    roundBlockSizeMode: RoundBlockSizeMode::Margin,
+                    foregroundColor: new Color(0, 0, 0),
+                    backgroundColor: new Color(255, 255, 255)
+                );
+                */
+		        //Create generic logo
+                /*
+                $logo = new Logo(
+                    path: storage_path('images/Luxer_image.png'),
+                    resizeToWidth: 50,
+                    punchoutBackground: true
+                );
+                */
+                // Create generic label
+                /*
+                $label = new Label(
+                    text: $student_inf->serial_student,
+                    textColor: new Color(255, 0, 0)
+                );
+                //$result = $writer->write($qrCode, $logo, $label);
+                $result = $writer->write($qrCode, $label);
+                
+                // Validate the result
+                $writer->validateResult($result, $target_sentence);
+                */
+                //header('Content-Type: '.$result->getMimeType());
+                //echo $result->getString();
+                // Save it to a file
+                
+                //$result->saveToFile(storage_path('images/'.$TargetStaffSerial.'.png'));
+                //$result->saveToFile($save_path);
+                /*
+                $qrCode = Builder::create()
+                ->writer(new PngWriter)
+                ->writerOptions([])
+                ->data($student_inf->serial_student)
+                ->encoding(new Encoding('UTF-8'))
+                ->errorCorectionLevel(new ErrorCorrectionLevelHigh())
+                ->size(300)
+                ->margin(10)
+                ->roundBlockSizeMode(new RoundBlockSizeMode())
+                ->lavelText($student_inf->serial_student)
+                ->lavelFont(new NotoSans())
+                ->lavelAlignment(new LavelAlignmentCenter)
+                ->validateResult(False);
+                $res=$qrCode;
+                file_put_contents(uniqid().'.png',$res->getstring());
+            
+            */
+            //}
+            /*
+            $qrCode = QrCode::create($student_inf->serial_student)
+                // 文字エンコーディングの設定（UTF-8にすることで日本語などの特殊文字も対応可能）
+                ->setEncoding(new Encoding('UTF-8'))
+
+                // 誤り訂正レベル（QRコードの一部が欠けても復元できる強度）
+                // High（30% まで復元可能）を設定
+                ->setErrorCorrectionLevel(ErrorCorrectionLevel::High)
+
+                // QRコードのサイズ（200px 四方に設定）
+                ->setSize(200)
+
+                // QRコードの余白（10px に設定）
+                // 余白がないと一部のリーダーで読み取れない可能性がある
+                ->setMargin(10)
+
+                // QRコードの四角形のサイズを調整（ブロックサイズを余白基準に設定）
+                ->setRoundBlockSizeMode(RoundBlockSizeMode::Margin)
+
+                // QRコードの前景色（黒に設定）
+                ->setForegroundColor(new Color(0, 0, 0))
+
+                // QRコードの背景色（白に設定）
+                ->setBackgroundColor(new Color(255, 255, 255));
+
+            // QRコードをPNGで出力
+            $writer = new PngWriter();
+            $result = $writer->write($qrCode);
+            */
+            /*
+            $sheet->getStyle( 'B1' )->getAlignment()->setHorizontal('center');  // 中央寄せ
+            $sheet->getStyle( 'C1' )->getAlignment()->setHorizontal('center');  // 中央寄せ
+            $sheet->getStyle( 'D1' )->getAlignment()->setHorizontal('center');  // 中央寄せ
+            $sheet->getColumnDimension( 'A' )->setWidth( 13 );
+            $sheet->getColumnDimension( 'B' )->setWidth( 20 );
+            $sheet->getColumnDimension( 'C' )->setWidth( 20 );
+            $sheet->getColumnDimension( 'D' )->setWidth( 10 );
+            */
+            $cnt++;
+        }
+        $writer = new Xlsx($spreadsheet);
+        $fileName='Students_list_'.date("Y_m_d").'.xlsx';
+        $writer->save($fileName);
+        $filePath = $fileName;
+        $mimeType = File::mimeType($filePath);
+            $headers = [['Content-Type' => $mimeType,
+                  'Content-Disposition' => 'attachment; filename*=UTF-8\'\''.rawurlencode($fileName)
+            ]];
+        return response()->download($fileName);
+        $this->skipRender();
+     }
 
     public function registered(){
         if(session('registered_flg')=="checked"){
@@ -101,16 +244,9 @@ class ListStudents extends Component
             session(['asc_desc' =>'ASC']);
         }
         $this->asc_desc_p=session('asc_desc');
-
         $StudentQuery = Student::query();
-
         $status_array=array();
         
-        log::alert('registered_flg 2='.session('registered_flg'));
-        log::alert('withdrawn_flg 2='.session('withdrawn_flg'));
-        log::alert('graduation_flg 2='.session('graduation_flg'));
-        log::alert('unregistered_flg 2='.session('unregistered_flg'));
-
         if(session('registered_flg')<>"checked"){
             $StudentQuery=$StudentQuery->where('status','<>','在籍');
         }
@@ -123,38 +259,7 @@ class ListStudents extends Component
         if(session('unregistered_flg')<>"checked"){
             $StudentQuery=$StudentQuery->where('status','<>','');
         }
-        /*else{
-            $StudentQuery=$StudentQuery->orwhereNull('status');
-        }*/
         
-        /*
-        if(session('registered_flg')=="checked" && session('unregistered_flg')=="" && session('withdrawn_flg')==""){
-            $users = $StudentQuery->where('name_sei','<>',null)
-                    ->where('name_sei','<>',"")
-                    ->Where(function($query) {
-                        $query->where('grade','=',null)
-                                ->orwhere('grade','<>','退会');
-                    });
-        }else if(session('registered_flg')=="checked" && session('unregistered_flg')=="" && session('withdrawn_flg')=="checked"){
-            $StudentQuery =$StudentQuery->where('grade','=',"退会")
-                ->orWhere(function($query) {
-                    $query->where('name_sei','<>',"")
-                    ->orwhere('name_sei','<>',null);
-                });
-        }else if(session('registered_flg')=="checked" && session('unregistered_flg')=="checked" && session('withdrawn_flg')==""){
-            $StudentQuery =$StudentQuery->where('grade','<>','退会')
-                ->orwhere('grade','=',null);
-        }else if(session('registered_flg')=="" && session('unregistered_flg')=="checked" && session('withdrawn_flg')=="checked"){
-            $StudentQuery =$StudentQuery->where('grade','=','退会')
-                ->orwhere('name_sei','=',"")
-                ->orwhere('name_sei','=',null);
-        }else if(session('registered_flg')=="" && session('unregistered_flg')=="" && session('withdrawn_flg')=="checked"){
-            $StudentQuery =$StudentQuery->where('grade','=','退会');
-        }else if(session('registered_flg')=="" && session('unregistered_flg')=="checked" && session('withdrawn_flg')==""){
-            $StudentQuery =$StudentQuery->whereNull('name_sei')
-                ->orwhere('name_sei','=',"");
-        }
-        */
         if($this->kensakukey<>""){
             self::$key="%".$this->kensakukey."%";
             $StudentQuery =$StudentQuery->where(function($query) {
@@ -169,17 +274,7 @@ class ListStudents extends Component
                 ->orwhere('email','like',self::$key);
             });
         }
-        /*
-            $StudentQuery =$StudentQuery->where('serial_student','like',self::$key)
-                ->orwhere('name_sei','like',self::$key)
-                ->orwhere('name_mei','like',self::$key)
-                ->orwhere('name_sei_kana','like',self::$key)
-                ->orwhere('name_mei_kana','like',self::$key)
-                ->orwhere('grade','like',self::$key)
-                ->orwhere('phone','like',self::$key)
-                ->orwhere('course','like',self::$key);
-        }
-                */
+
         $targetSortKey="";
         if(session('sort_key')<>""){
             $targetSortKey=session('sort_key');
@@ -215,14 +310,6 @@ class ListStudents extends Component
                 }
             }
         }
-        /*
-        log::alert('sort_key2='.session('sort_key2'));
-        log::alert('asc_desc2='.session('asc_desc2'));
-        //if(session('sort_key2')<>"" or empty(session('sort_key2'))){
-        if(!empty(session('sort_key2'))){
-            $StudentQuery =$StudentQuery->orderBy(session('sort_key2'), session('asc_desc2'));
-        }
-        */
         $REQUEST_array=explode("page=", $_SERVER['REQUEST_URI']);
         if(isset($REQUEST_array[1])){
             session(['page_history' => $REQUEST_array[1]]);

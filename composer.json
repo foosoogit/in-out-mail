@@ -5,13 +5,15 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "^8.3",
+        "endroid/qr-code": "^6.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/breeze": "*",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.1",
+        "phpoffice/phpspreadsheet": "^4.4",
         "picqer/php-barcode-generator": "^2.4"
     },
     "require-dev": {
@@ -63,6 +65,9 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "platform": {
+            "php": "8.3.6"
         }
     },
     "minimum-stability": "stable",

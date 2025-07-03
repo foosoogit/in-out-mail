@@ -30,6 +30,9 @@
                 <div class="col-auto">
                     <button type="button" name="SerchClearBtn" id="SerchClearBtn" wire:click="searchClear()" onclick="document.getElementById('kensakukey_txt').value=''" class="btn btn-primary btn-sm">検索解除</button>
                 </div>
+                <div class="col-auto">
+                    <button type="button" name="SerchBtn" id="SerchBtn" wire:click="csv_download()" class="btn btn-primary btn-sm">在籍者一覧のダウンロード</button>
+                </div>
             </div>
             <div>
             <table id="table_responsive">

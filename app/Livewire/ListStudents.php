@@ -14,6 +14,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\File;
 
+
 //QRコードライブラリに必要な読み込み
 /*
 use Endroid\QrCode\QrCode;
@@ -319,7 +320,6 @@ class ListStudents extends Component
         }else{
             $students=$StudentQuery->paginate($perPage = initConsts::DdisplayLineNumStudentsList(),['*']);
         }
-
         //session(['HTTP_REFERER' => $_SERVER['HTTP_REFERER']]);
         //$page_history=$REQUEST_array[1];
         return view('livewire.list-students',['students'=>$students,]);
